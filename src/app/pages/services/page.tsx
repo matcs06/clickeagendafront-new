@@ -6,10 +6,13 @@ import { useAuth } from "@/app/auth/context/auth-context";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { Edit } from "lucide-react";
+
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {OrbitProgress} from "react-loading-indicators"
 import CreateServiceModal from "./modals/create-service-modal";
 import { Trash } from "lucide-react"; // Certifique-se de instalar o pacote lucide-react
+import UpdateServiceModal from "./modals/update-service-modal";
 
 interface Service {
   id: string;
@@ -69,7 +72,6 @@ export default function Services() {
     }
   };
 
-
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-10">
@@ -94,8 +96,24 @@ export default function Services() {
         {loading == false && (
           services.map((service) => (
             <Card key={service.id} className="hover:shadow-lg transition-shadow flex flex-col">
-              <CardHeader>
+              <CardHeader className="flex flex-row justify-between items-center">
                 <CardTitle>{service.name.split("-")[0]}</CardTitle>
+
+                <Dialog>
+                    <DialogTrigger asChild>
+                      <Button className="flex gap-2 max-w-7 max-h-6 right-0 hover:bg-white hover:text-blue-800 bg-white text-black" >
+                        <Edit size={16} />
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="flex justify-center items-center">
+                      <DialogHeader>
+                        <DialogTitle>Atualizar Serviço</DialogTitle>
+                      </DialogHeader>
+                      {/* Aqui vai o formulário de atualizacao de serviço */}
+                      <UpdateServiceModal onClose={() => setIsOpen(false)} onServiceCreated={fetchServices}   service={service} />
+                    </DialogContent>
+                  </Dialog>
+               
               </CardHeader>
               <CardContent className="flex flex-col h-full">
                 <div className="flex-grow min-h-9 max-h-20 justify-center items-center overflow-y-scroll">
@@ -118,8 +136,9 @@ export default function Services() {
                   >
                     <Trash className="h-5 w-5" />
                   </Button>
-              </div>
-                </CardContent>
+                </div>
+                
+              </CardContent>
                
             </Card>
             

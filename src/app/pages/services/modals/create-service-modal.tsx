@@ -39,7 +39,7 @@ export default function CreateServiceModal({ onClose, onServiceCreated }: Create
       const token = localStorage.getItem("token");
       await axios.post(
         "https://clickeagenda.arangal.com/products",
-        { name, description, price, duration, user_id },
+        { name: name + "-" + user_id, description, price, duration, user_id },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       toast.success("Serviço criado com sucesso!", {
@@ -66,7 +66,7 @@ export default function CreateServiceModal({ onClose, onServiceCreated }: Create
   };
 
   return (
-    <DialogContent>
+    <DialogContent >
       <DialogHeader>
         <DialogTitle>Criar Novo Serviço</DialogTitle>
       </DialogHeader>

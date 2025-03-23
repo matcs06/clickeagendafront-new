@@ -7,15 +7,18 @@ import { cn } from "@/lib/utils";
 import axios from "axios";
 
 interface UpdateServiceModalProps {
+  service: { id: string; name: string; description: string; price: number; duration: string, enabled: boolean };
   onClose: () => void;
   onServiceCreated: () => void;
+
 }
 
-export default function UpdateServiceModal({ onClose, onServiceCreated }: UpdateServiceModalProps) {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [duration, setDuration] = useState("");
+export default function UpdateServiceModal({ onClose, onServiceCreated, service }: UpdateServiceModalProps) {
+  const [name, setName] = useState(service.name.split("-")[0]);
+  const [description, setDescription] = useState(service.description);
+  const [price, setPrice] = useState(service.price.toString());
+  const [duration, setDuration] = useState(service.duration);
+  //const [enabled, setIsEnabled] = useState(service.enabled);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
 
@@ -36,9 +39,9 @@ export default function UpdateServiceModal({ onClose, onServiceCreated }: Update
     try {
       const user_id = localStorage.getItem("user_id");
       const token = localStorage.getItem("token");
-      await axios.post(
-        "https://clickeagenda.arangal.com/products",
-        { name, description, price, duration, user_id },
+      await axios.patch(
+        "https://clickeagenda.arangal.com/products/" + service.id,
+        { name: name + "-" + user_id, description, price, duration, user_id },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       onServiceCreated();
@@ -67,6 +70,7 @@ export default function UpdateServiceModal({ onClose, onServiceCreated }: Update
       <div className="space-y-4">
         <div>
           <Input
+            title="Nome do serviço"
             placeholder="Nome do serviço"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -77,6 +81,7 @@ export default function UpdateServiceModal({ onClose, onServiceCreated }: Update
         
         <div>
           <Textarea
+            title="Descriçao"
             placeholder="Descrição"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -87,7 +92,9 @@ export default function UpdateServiceModal({ onClose, onServiceCreated }: Update
         
         <div className="flex gap-4">
           <div className="w-1/2">
+
             <Input
+            title="Preço"
               type="number"
               placeholder="Preço"
               value={price}
@@ -98,6 +105,7 @@ export default function UpdateServiceModal({ onClose, onServiceCreated }: Update
           </div>
           <div className="w-1/2">
             <Input
+              title="Duração"
               type="text"
               placeholder="Duração (hh:mm)"
               value={duration}
@@ -109,7 +117,7 @@ export default function UpdateServiceModal({ onClose, onServiceCreated }: Update
         </div>
         
         <Button onClick={handleCreateService} disabled={loading} className="w-full">
-          {loading ? "Criando..." : "Criar Serviço"}
+          {loading ? "Atualizando..." : "Atualizar Serviço"}
         </Button>
       </div>
     </DialogContent>
