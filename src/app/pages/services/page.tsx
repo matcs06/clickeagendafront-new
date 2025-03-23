@@ -100,7 +100,9 @@ export default function Services() {
       <div className="cursor-pointer grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {loading == false && (
           services.map((service) => (
-            <Card key={service.id} className="hover:shadow-lg transition-shadow flex flex-col">
+            <Card key={service.id} className={`hover:shadow-lg transition-shadow flex flex-col ${
+              !service.enabled ? "opacity-70 bg-gray-100" : "bg-white"
+            }`}>
               <CardHeader className="flex flex-row justify-between items-center">
                 <CardTitle>{service.name.split("-")[0]}</CardTitle>
 
@@ -142,7 +144,14 @@ export default function Services() {
                     <Trash className="h-5 w-5" />
                   </Button>
                 </div>
-                
+                {/* Badge for Enabled/Disabled Status */}
+                {!service.enabled && (
+                  <div className="mt-2 text-center">
+                    <span className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full">
+                      Dasabilitado
+                    </span>
+                  </div>
+                )}
               </CardContent>
                
             </Card>

@@ -3,6 +3,7 @@ import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch"; // Import a switch component (or use a checkbox)
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { toast } from "sonner"; // Import the toast library
@@ -19,7 +20,7 @@ export default function UpdateServiceModal({ onClose, onServiceCreated, service 
   const [description, setDescription] = useState(service.description);
   const [price, setPrice] = useState(service.price.toString());
   const [duration, setDuration] = useState(service.duration);
-  //const [enabled, setIsEnabled] = useState(service.enabled);
+  const [enabled, setIsEnabled] = useState(service.enabled);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
 
@@ -42,7 +43,7 @@ export default function UpdateServiceModal({ onClose, onServiceCreated, service 
       const token = localStorage.getItem("token");
       await axios.patch(
         "https://clickeagenda.arangal.com/products/" + service.id,
-        { name: name + "-" + user_id, description, price, duration, user_id },
+        { name: name + "-" + user_id, description, price, duration, user_id, enabled },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       toast.success("Serviço atualizado com sucesso!", {
@@ -119,6 +120,16 @@ export default function UpdateServiceModal({ onClose, onServiceCreated, service 
             />
             {errors.duration && <p className="text-red-500 text-sm">Campo obrigatório</p>}
           </div>
+        </div>
+        {/* Add the enabled/disabled toggle */}
+        <div className="flex items-center space-x-2">
+          <Switch
+            id="enabled"
+            checked={enabled}
+            className="cursor-pointer"
+            onCheckedChange={(checked) => setIsEnabled(checked)}
+          />
+          <label htmlFor="enabled">{enabled ? "Habilitado" : "Desabilitado"}</label>
         </div>
         
         <Button onClick={handleCreateService} disabled={loading} className="w-full">
