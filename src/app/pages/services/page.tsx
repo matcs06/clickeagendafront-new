@@ -7,12 +7,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Edit } from "lucide-react";
+import {toast} from "sonner";
 
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {OrbitProgress} from "react-loading-indicators"
-import CreateServiceModal from "./modals/create-service-modal";
 import { Trash } from "lucide-react"; // Certifique-se de instalar o pacote lucide-react
 import UpdateServiceModal from "./modals/update-service-modal";
+import CreateServiceModal from "./modals/create-service-modal";
 
 interface Service {
   id: string;
@@ -66,9 +67,13 @@ export default function Services() {
   const handleDeleteService = async (id: string) => {
     try {
       await apiRequest(`products/${id}`, { method: "DELETE" });
+      toast.success("Serviço excluído com sucesso!", {
+        duration: 3000,
+      });
       fetchServices();
     } catch (error) {
       console.error("Erro ao excluir serviço:", error);
+      toast.error("Erro ao excluir serviço.");
     }
   };
 

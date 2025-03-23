@@ -2,6 +2,7 @@
 import Sidebar from "@/components/ui/sidebar";
 import { useState } from "react";
 import Services from "./pages/services/page";
+import { Toaster } from "sonner";
 export default function Home() {
   const [selectedPage, setSelectedPage] = useState("dashboard");
 
@@ -13,6 +14,8 @@ export default function Home() {
         {selectedPage === "services" && <Services />}
 
       </main>
+      <Toaster position="top-right" richColors />
+
     </div>
   );
 }

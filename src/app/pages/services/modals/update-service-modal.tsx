@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import axios from "axios";
+import { toast } from "sonner"; // Import the toast library
 
 interface UpdateServiceModalProps {
   service: { id: string; name: string; description: string; price: number; duration: string, enabled: boolean };
@@ -44,10 +45,14 @@ export default function UpdateServiceModal({ onClose, onServiceCreated, service 
         { name: name + "-" + user_id, description, price, duration, user_id },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      toast.success("Serviço atualizado com sucesso!", {
+        duration: 3000,
+      });
       onServiceCreated();
       onClose();
     } catch (error) {
       console.error("Error creating service:", error);
+      toast.error("Erro ao atualizar serviço.");
     } finally {
       setLoading(false);
     }
