@@ -1,5 +1,4 @@
 "use client"
-import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -27,14 +26,12 @@ export default function LoginPage() {
 
     const success = await login(credentials.username, credentials.password);
     if (success) {
-      console.log("Login bem-sucedido!");
       router.push("/pages/dashboard");
     } else {
       toast.error("Usuário ou senha inválidos.");
     }
   };
 
-  console.log(credentials.password, credentials.username)
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };

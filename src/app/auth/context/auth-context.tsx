@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation"; // Import useRouter
 
 interface AuthContextType {
   token: string | null;
@@ -15,6 +16,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(Cookies.get("token") ?? null);
   const [user_id, setUserId] = useState<string | null>(Cookies.get("user_id") ?? null);
+  const router = useRouter(); // Initialize router
 
   useEffect(() => {
     const storedToken = Cookies.get("token");
@@ -49,6 +51,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     Cookies.remove("user_id");
     setToken(null);
     setUserId(null);
+    router.push("/login");
+
   };
 
   return (

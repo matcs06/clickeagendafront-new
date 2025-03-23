@@ -132,7 +132,7 @@ export default function Services() {
                 </div>
              
                 <div className="flex justify-between items-center mt-auto border-t pt-2">
-                  <p className="text-sm text-muted-foreground">R$ {service.price}</p>
+                  <p className="text-sm text-muted-foreground mr-2.5">R$ {service.price}</p>
                   <p className="text-sm text-muted-foreground">⏳ {service.duration} h</p>
 
                   <Button
