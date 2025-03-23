@@ -80,8 +80,8 @@ export default function Services() {
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-10">
-        <h1 className="text-2xl font-bold">Meus Serviços</h1>
-        <Dialog>
+        <h1 className="text-xl sm:text-2xl font-semibold text-foreground mr-5">Serviços</h1>
+       <Dialog>
           <DialogTrigger asChild>
             <Button className="flex gap-2">
               <Plus size={16} /> Novo Serviço
@@ -97,20 +97,20 @@ export default function Services() {
           </DialogContent>
         </Dialog>
       </div>
-      <div className="cursor-pointer grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {loading == false && (
           services.map((service) => (
-            <Card key={service.id} className={`hover:shadow-lg transition-shadow flex flex-col ${
-              !service.enabled ? "opacity-70 bg-gray-100" : "bg-white"
+            <Card key={service.id}  className={`hover:shadow-lg transition-shadow flex flex-col ${
+              !service.enabled ? "opacity-70 bg-muted" : "bg-background"
             }`}>
               <CardHeader className="flex flex-row justify-between items-center">
                 <CardTitle>{service.name.split("-")[0]}</CardTitle>
 
                 <Dialog>
                     <DialogTrigger asChild>
-                      <Button className="flex gap-2 max-w-7 max-h-6 right-0 hover:bg-white hover:text-blue-800 bg-white text-black" >
-                        <Edit size={16} />
-                      </Button>
+                    <Button className="cursor-pointer flex gap-2 max-w-7 max-h-6 right-0 hover:bg-muted hover:text-primary bg-card text-foreground">
+                      <Edit size={16} />
+                    </Button>
                     </DialogTrigger>
                     <DialogContent className="flex justify-center items-center">
                       <DialogHeader>
@@ -125,22 +125,22 @@ export default function Services() {
               <CardContent className="flex flex-col h-full">
                 <div className="flex-grow min-h-9 max-h-20 justify-center items-center overflow-y-scroll">
                 {service.description.split(";").map((descLine) => (
-                              <p className="text-gray-600 whitespace-pre-line h-max" key={descLine}>
+                              <p className="text-muted-foreground whitespace-pre-line h-max" key={descLine}>
                                  {descLine}
                               </p>
                            ))}
                 </div>
              
                 <div className="flex justify-between items-center mt-auto border-t pt-2">
-                  <p className="text-sm text-gray-500">R$ {service.price}</p>
-                  <p className="text-sm text-gray-500">⏳ {service.duration} h</p>
+                  <p className="text-sm text-muted-foreground">R$ {service.price}</p>
+                  <p className="text-sm text-muted-foreground">⏳ {service.duration} h</p>
 
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => handleDeleteService(service.id)}
-                    className="text-red-600 hover:bg-red-100 hover:text-red-700"
-                  >
+                    className="cursor-pointer text-destructive hover:bg-destructive/10 hover:text-destructive-foreground"
+                    >
                     <Trash className="h-5 w-5" />
                   </Button>
                 </div>
