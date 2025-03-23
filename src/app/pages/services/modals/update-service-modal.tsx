@@ -1,0 +1,117 @@
+import { useState } from "react";
+import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import axios from "axios";
+
+interface UpdateServiceModalProps {
+  onClose: () => void;
+  onServiceCreated: () => void;
+}
+
+export default function UpdateServiceModal({ onClose, onServiceCreated }: UpdateServiceModalProps) {
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [duration, setDuration] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
+
+  const handleCreateService = async () => {
+    const newErrors: { [key: string]: boolean } = {
+      name: !name,
+      description: !description,
+      price: !price,
+      duration: !duration,
+    };
+    setErrors(newErrors);
+
+    if (Object.values(newErrors).some((error) => error)) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const user_id = localStorage.getItem("user_id");
+      const token = localStorage.getItem("token");
+      await axios.post(
+        "https://clickeagenda.arangal.com/products",
+        { name, description, price, duration, user_id },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      onServiceCreated();
+      onClose();
+    } catch (error) {
+      console.error("Error creating service:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDurationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let val = e.target.value.replace(/[^0-9]/g, "");
+    if (val.length > 4) return;
+    if (val.length > 2) {
+      val = `${val.slice(0, 2)}:${val.slice(2)}`;
+    }
+    setDuration(val);
+  };
+
+  return (
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle>Atualizar Serviço</DialogTitle>
+      </DialogHeader>
+      <div className="space-y-4">
+        <div>
+          <Input
+            placeholder="Nome do serviço"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className={cn(errors.name && "border-red-500")}
+          />
+          {errors.name && <p className="text-red-500 text-sm">Campo obrigatório</p>}
+        </div>
+        
+        <div>
+          <Textarea
+            placeholder="Descrição"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className={cn(errors.description && "border-red-500")}
+          />
+          {errors.description && <p className="text-red-500 text-sm">Campo obrigatório</p>}
+        </div>
+        
+        <div className="flex gap-4">
+          <div className="w-1/2">
+            <Input
+              type="number"
+              placeholder="Preço"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              className={cn(errors.price && "border-red-500")}
+            />
+            {errors.price && <p className="text-red-500 text-sm">Campo obrigatório</p>}
+          </div>
+          <div className="w-1/2">
+            <Input
+              type="text"
+              placeholder="Duração (hh:mm)"
+              value={duration}
+              onChange={handleDurationChange}
+              className={cn(errors.duration && "border-red-500")}
+            />
+            {errors.duration && <p className="text-red-500 text-sm">Campo obrigatório</p>}
+          </div>
+        </div>
+        
+        <Button onClick={handleCreateService} disabled={loading} className="w-full">
+          {loading ? "Criando..." : "Criar Serviço"}
+        </Button>
+      </div>
+    </DialogContent>
+  );
+}
