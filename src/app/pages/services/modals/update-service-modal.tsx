@@ -7,15 +7,16 @@ import { Switch } from "@/components/ui/switch"; // Import a switch component (o
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { toast } from "sonner"; // Import the toast library
+import Cookies from "js-cookie";
+
 
 interface UpdateServiceModalProps {
   service: { id: string; name: string; description: string; price: number; duration: string, enabled: boolean };
-  onClose: () => void;
   onServiceCreated: () => void;
 
 }
 
-export default function UpdateServiceModal({ onClose, onServiceCreated, service }: UpdateServiceModalProps) {
+export default function UpdateServiceModal({ onServiceCreated, service }: UpdateServiceModalProps) {
   const [name, setName] = useState(service.name.split("-")[0]);
   const [description, setDescription] = useState(service.description);
   const [price, setPrice] = useState(service.price.toString());
@@ -24,7 +25,7 @@ export default function UpdateServiceModal({ onClose, onServiceCreated, service 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
 
-  const handleCreateService = async () => {
+  const handleUpdateService = async () => {
     const newErrors: { [key: string]: boolean } = {
       name: !name,
       description: !description,
@@ -39,8 +40,8 @@ export default function UpdateServiceModal({ onClose, onServiceCreated, service 
 
     setLoading(true);
     try {
-      const user_id = localStorage.getItem("user_id");
-      const token = localStorage.getItem("token");
+      const user_id = Cookies.get("user_id");
+      const token = Cookies.get("token");
       await axios.patch(
         "https://clickeagenda.arangal.com/products/" + service.id,
         { name: name + "-" + user_id, description, price, duration, user_id, enabled },
@@ -50,7 +51,6 @@ export default function UpdateServiceModal({ onClose, onServiceCreated, service 
         duration: 3000,
       });
       onServiceCreated();
-      onClose();
     } catch (error) {
       console.error("Error creating service:", error);
       toast.error("Erro ao atualizar serviço.");
@@ -132,7 +132,7 @@ export default function UpdateServiceModal({ onClose, onServiceCreated, service 
           <label htmlFor="enabled">{enabled ? "Habilitado" : "Desabilitado"}</label>
         </div>
         
-        <Button onClick={handleCreateService} disabled={loading} className="w-full">
+        <Button onClick={handleUpdateService} disabled={loading} className="w-full cursor-pointer">
           {loading ? "Atualizando..." : "Atualizar Serviço"}
         </Button>
       </div>

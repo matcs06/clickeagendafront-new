@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { apiRequest } from "@/lib/api";
-import { useAuth } from "@/app/auth/context/auth-context";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Edit } from "lucide-react";
 import {toast} from "sonner";
+import {  useQuery } from "@tanstack/react-query";
+import {  useQueryClient } from "@tanstack/react-query";
 
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {OrbitProgress} from "react-loading-indicators"
@@ -26,35 +27,15 @@ interface Service {
 }
 
 export default function Services() {
-  const { token } = useAuth();
-  const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const response = await apiRequest("products"); // No need to append user_id
-         // Assuming the response is an array of services
-         setServices(response ?? []); // Fallback to empty array if response is undefined
-      } catch (error) {
-        console.error("Erro ao buscar serviços:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    
-    fetchServices();
-  }, [token, isOpen]);
-
+  const queryClient = useQueryClient();
 
 
   const fetchServices = async () => {
     try {
       const response = await apiRequest("products"); // No need to append user_id
        // Assuming the response is an array of services
-       setServices(response ?? []); // Fallback to empty array if response is undefined
+       return response ?? []; // Fallback to empty array if response is undefined
 
     } catch (error) {
       console.error("Erro ao buscar serviços:", error);
@@ -64,13 +45,21 @@ export default function Services() {
     }
   };
 
+  const { data: services, error, isLoading } = useQuery({
+    queryKey: ["services"],
+    queryFn: fetchServices,
+    },
+  );
+
+  if (error) return toast.error("Erro ao buscar serviços.");
+
   const handleDeleteService = async (id: string) => {
     try {
       await apiRequest(`products/${id}`, { method: "DELETE" });
       toast.success("Serviço excluído com sucesso!", {
         duration: 3000,
       });
-      fetchServices();
+      queryClient.invalidateQueries({ queryKey: ["services"] });
     } catch (error) {
       console.error("Erro ao excluir serviço:", error);
       toast.error("Erro ao excluir serviço.");
@@ -79,11 +68,11 @@ export default function Services() {
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <div className="flex justify-between items-center mb-10">
-        <h1 className="text-xl sm:text-2xl font-semibold text-foreground mr-5">Serviços</h1>
+      <div className="flex justify-between items-center mb-10 border-b pb-5">
+        <h3 className="text-xl font-semibold text-foreground mr-5">Serviços</h3>
        <Dialog>
           <DialogTrigger asChild>
-            <Button className="flex gap-2">
+            <Button className="flex gap-2 cursor-pointer">
               <Plus size={16} /> Novo Serviço
             </Button>
           </DialogTrigger>
@@ -92,14 +81,14 @@ export default function Services() {
               <DialogTitle>Criar Novo Serviço</DialogTitle>
             </DialogHeader>
             {/* Aqui vai o formulário de criação de serviço */}
-            <CreateServiceModal onClose={() => setIsOpen(false)} onServiceCreated={fetchServices} />
+            <CreateServiceModal onServiceCreated={()=>{queryClient.invalidateQueries({ queryKey: ["services"] })}} />
 
           </DialogContent>
         </Dialog>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {loading == false && (
-          services.map((service) => (
+          services.map((service: Service) => (
             <Card key={service.id}  className={`hover:shadow-lg transition-shadow flex flex-col ${
               !service.enabled ? "opacity-70 bg-muted" : "bg-background"
             }`}>
@@ -117,14 +106,14 @@ export default function Services() {
                         <DialogTitle>Atualizar Serviço</DialogTitle>
                       </DialogHeader>
                       {/* Aqui vai o formulário de atualizacao de serviço */}
-                      <UpdateServiceModal onClose={() => setIsOpen(false)} onServiceCreated={fetchServices}   service={service} />
+                      <UpdateServiceModal onServiceCreated={()=>{queryClient.invalidateQueries({ queryKey: ["services"] })}}   service={service} />
                     </DialogContent>
                   </Dialog>
                
               </CardHeader>
               <CardContent className="flex flex-col h-full">
                 <div className="flex-grow min-h-9 max-h-20 justify-center items-center overflow-y-scroll">
-                {service.description.split(";").map((descLine) => (
+                {service.description.split(";").map((descLine: string) => (
                               <p className="text-muted-foreground whitespace-pre-line h-max" key={descLine}>
                                  {descLine}
                               </p>
@@ -160,7 +149,7 @@ export default function Services() {
           
         ) }
       </div>
-      {loading &&
+      {isLoading &&
             <div className="flex justify-center items-center mt-14">
               <OrbitProgress dense color="#3d4e3d" size="small" text="" textColor="#7e4e4e" />          
 

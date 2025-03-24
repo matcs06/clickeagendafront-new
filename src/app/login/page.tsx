@@ -54,7 +54,6 @@ export default function LoginPage() {
                   id="username"
                   name="username"
                   type="text"
-                  placeholder="usuario"
                   required
                 />
               </div>

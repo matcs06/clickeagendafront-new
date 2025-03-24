@@ -6,13 +6,14 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { toast } from "sonner"; // Import the toast library
+import Cookies from "js-cookie";
+
 
 interface CreateServiceModalProps {
-  onClose: () => void;
   onServiceCreated: () => void;
 }
 
-export default function CreateServiceModal({ onClose, onServiceCreated }: CreateServiceModalProps) {
+export default function CreateServiceModal({ onServiceCreated }: CreateServiceModalProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -35,8 +36,9 @@ export default function CreateServiceModal({ onClose, onServiceCreated }: Create
 
     setLoading(true);
     try {
-      const user_id = localStorage.getItem("user_id");
-      const token = localStorage.getItem("token");
+      const user_id = Cookies.get("user_id");
+      const token = Cookies.get("token");
+      
       await axios.post(
         "https://clickeagenda.arangal.com/products",
         { name: name + "-" + user_id, description, price, duration, user_id },
@@ -46,7 +48,6 @@ export default function CreateServiceModal({ onClose, onServiceCreated }: Create
         duration: 3000,
       });
       onServiceCreated();
-      onClose();
     } catch (error) {
       console.error("Error creating service:", error);
       toast.error("Erro ao criar serviço.");
@@ -114,7 +115,7 @@ export default function CreateServiceModal({ onClose, onServiceCreated }: Create
           </div>
         </div>
         
-        <Button onClick={handleCreateService} disabled={loading} className="w-full">
+        <Button onClick={handleCreateService} disabled={loading} className="cursor-pointer w-full">
           {loading ? "Criando..." : "Criar Serviço"}
         </Button>
       </div>
