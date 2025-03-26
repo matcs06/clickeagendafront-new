@@ -6,7 +6,6 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { SidebarWrapper } from "./wrapper/side-bar-wrapper";
 import { QueryProvider } from "./providers/query-provider";
 import { Toaster } from "sonner";
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -35,6 +34,7 @@ export default function RootLayout({
       >
         <AuthProvider>
           <QueryProvider>
+
           <ThemeProvider
               attribute="class"
               defaultTheme="system"

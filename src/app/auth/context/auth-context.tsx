@@ -11,6 +11,7 @@ interface AuthContextType {
   business_name: string | null;
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
+  authenticateWithGoogle: (user_name:string, token:string, user_id:string, name:string) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -71,8 +72,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   };
 
+  const authenticateWithGoogle = async (user_name:string, token:string, user_id:string, name:string)  => { 
+    Cookies.set("token", token, { expires: 7 }); // Stores token for 7 days
+    Cookies.set("user_id", user_id, { expires: 7 }); // Store user_id
+    Cookies.set("name", name, { expires: 7 }); // Store user_name
+    Cookies.set("user_name", user_name, { expires: 7 }); // Store user_name
+             
+  };
+
   return (
-    <AuthContext.Provider value={{ token, user_id, name, business_name, login, logout }}>
+    <AuthContext.Provider value={{ token, user_id, name, business_name, login, logout, authenticateWithGoogle }}>
       {children}
     </AuthContext.Provider>
   );

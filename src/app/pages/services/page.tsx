@@ -86,8 +86,8 @@ export default function Services() {
           </DialogContent>
         </Dialog>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {loading == false && (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 min-h-[200px]">
+      {loading == false && (
           services.map((service: Service) => (
             <Card key={service.id}  className={`hover:shadow-lg transition-shadow flex flex-col ${
               !service.enabled ? "opacity-70 bg-muted" : "bg-background"
@@ -150,7 +150,7 @@ export default function Services() {
         ) }
       </div>
       {isLoading &&
-            <div className="flex justify-center items-center mt-14">
+            <div className="col-span-full flex justify-center">
               <OrbitProgress dense color="#3d4e3d" size="small" text="" textColor="#7e4e4e" />          
 
             </div>

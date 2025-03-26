@@ -22,6 +22,7 @@
     "axios": "^1.8.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "google-one-tap": "^1.0.6",
     "jotai": "^2.12.2",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.483.0",

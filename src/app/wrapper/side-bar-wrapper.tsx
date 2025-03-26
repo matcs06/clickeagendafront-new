@@ -3,8 +3,8 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { usePathname } from "next/navigation";
 import { AppSidebar } from "@/components/app-sidebar"
-import { ModeToggle } from "@/components/mode-toogle";
 import { ReactNode } from "react";
+import { ModeToggle } from "@/components/mode-toogle";
 
 export function SidebarWrapper({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -16,8 +16,10 @@ export function SidebarWrapper({ children }: { children: ReactNode }) {
     !authRoutes.includes(pathname) ? (
       <SidebarProvider>
         <AppSidebar />
-        <SidebarTrigger />
-        <ModeToggle/>
+        <div>
+          <SidebarTrigger className="cursor-pointer"/>
+          <ModeToggle />
+        </div>
         {children}
       </SidebarProvider>
     ) : (
