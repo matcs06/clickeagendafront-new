@@ -56,7 +56,7 @@ const data = {
     },
     {
       title: "Serviços",
-      url: "/pages/services",
+      url: "/admin/pages/services",
       icon: WorkflowIcon
     },
     {

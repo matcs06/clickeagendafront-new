@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useAuth } from "../context/auth-context";
-
+import api from "@/api/api";
 export default function GoogleCallback() {
   const router = useRouter();
   const { authenticateWithGoogle } = useAuth();
@@ -13,7 +13,6 @@ export default function GoogleCallback() {
     const id_token = hashParams.get("id_token");
 
     if (id_token) {
-      console.log("id_token:", id_token);
       const storedNonce = sessionStorage.getItem("google_nonce");
 
       if (storedNonce) {
@@ -32,29 +31,24 @@ export default function GoogleCallback() {
       }
 
       // Send the token to your backend for verification
-      fetch("https://clickeagenda.arangal.com/sessions/google/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ google_id_token: id_token }),
+      api.post("/sessions/google", { google_id_token: id_token })
+      .then((response) => {
+        const { access_token, user } = response.data;
+
+        if (access_token && user) {
+          // Call your authenticateWithGoogle function with the necessary fields
+          authenticateWithGoogle(user.username, access_token, user.user_id, user.name);
+
+          // Redirect to the dashboard
+          router.push("/dashboard");
+        } else {
+          toast.error("Authentication failed");
+        }
       })
-        .then((response) => response.json())  // Parse the JSON response
-        .then((data) => {
-          if (data.token && data.user) {
-            console.log("Authentication successful", data);
+      .catch(() => {
+        toast.error("An error occurred during authentication.");
+      });
 
-            // Call your authenticateWithGoogle function with the necessary fields
-            authenticateWithGoogle(data.user.username, data.token, data.user.user_id, data.user.name);
-
-            // Redirect to the dashboard
-            router.push("/dashboard");
-          } else {
-            toast.error("Authentication failed");
-          }
-        })
-        .catch((error) => {
-          console.error("Error during authentication:", error);
-          toast.error("An error occurred during authentication.");
-        });
     } else {
       toast.error("Google login failed!");
     }

@@ -1,7 +1,7 @@
 "use client";
 
+import api from "@/api/api";
 import { useState } from "react";
-import { apiRequest } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -9,7 +9,7 @@ import { Edit } from "lucide-react";
 import {toast} from "sonner";
 import {  useQuery } from "@tanstack/react-query";
 import {  useQueryClient } from "@tanstack/react-query";
-
+import Cookies from "js-cookie";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {OrbitProgress} from "react-loading-indicators"
 import { Trash } from "lucide-react"; // Certifique-se de instalar o pacote lucide-react
@@ -30,16 +30,25 @@ export default function Services() {
   const [loading, setLoading] = useState(true);
   const queryClient = useQueryClient();
 
-
   const fetchServices = async () => {
     try {
-      const response = await apiRequest("products"); // No need to append user_id
-       // Assuming the response is an array of services
-       return response ?? []; // Fallback to empty array if response is undefined
-
+      const token = Cookies.get("token");
+      const user_id = Cookies.get("user_id");
+  
+      if (!token || !user_id) throw new Error("User not authenticated");
+  
+      const response = await api.get(`/products?user_id=${user_id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true, // Ensures cookies are sent if needed
+      });
+  
+      return response.data ?? []; // Ensure an array is always returned
+  
     } catch (error) {
       console.error("Erro ao buscar serviços:", error);
-  
+      return []; // Fallback to empty array on error
     } finally {
       setLoading(false);
     }
@@ -53,23 +62,35 @@ export default function Services() {
 
   if (error) return toast.error("Erro ao buscar serviços.");
 
-  const handleDeleteService = async (id: string) => {
-    try {
-      await apiRequest(`products/${id}`, { method: "DELETE" });
-      toast.success("Serviço excluído com sucesso!", {
-        duration: 3000,
-      });
-      queryClient.invalidateQueries({ queryKey: ["services"] });
-    } catch (error) {
-      console.error("Erro ao excluir serviço:", error);
-      toast.error("Erro ao excluir serviço.");
-    }
-  };
+const handleDeleteService = async (id: string) => {
+  try {
+    const token = Cookies.get("token");
+
+    if (!token) throw new Error("User not authenticated");
+
+    await api.delete(`/products/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      withCredentials: true, // Ensures cookies are sent if needed
+    });
+
+    toast.success("Serviço excluído com sucesso!", {
+      duration: 3000,
+    });
+
+    queryClient.invalidateQueries({ queryKey: ["services"] });
+
+  } catch (error) {
+    console.error("Erro ao excluir serviço:", error);
+    toast.error("Erro ao excluir serviço.");
+  }
+};
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-10 border-b pb-5">
-        <h3 className="text-xl font-semibold text-foreground mr-5">Serviços</h3>
+        <h3 className="text-xl font-semibold mr-7 text-foreground">Serviços</h3>
        <Dialog>
           <DialogTrigger asChild>
             <Button className="flex gap-2 cursor-pointer">

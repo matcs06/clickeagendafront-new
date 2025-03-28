@@ -29,7 +29,6 @@ export default function LoginPage() {
     
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(credentials.password, credentials.username)
 
     const success = await login(credentials.username, credentials.password);
     if (success) {
@@ -47,8 +46,6 @@ export default function LoginPage() {
   sessionStorage.setItem("google_nonce", nonce);  // Store it temporarily for later validation
   
   const handleGoogleLogin = async () => {
-    console.log(process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI)
-    console.log(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID)
 
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
     `client_id=${process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID}` +
