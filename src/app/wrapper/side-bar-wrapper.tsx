@@ -9,6 +9,7 @@ import { ModeToggle } from "@/components/mode-toogle";
 export function SidebarWrapper({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
+  
   // Define routes where the sidebar should be hidden
   const authRoutes = ["/login", "/register"];
 

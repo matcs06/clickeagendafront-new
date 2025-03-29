@@ -110,11 +110,11 @@ const handleDeleteService = async (id: string) => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 min-h-[200px]">
       {loading == false && (
           services.map((service: Service) => (
-            <Card key={service.id}  className={`hover:shadow-lg transition-shadow flex flex-col ${
+            <Card key={service.id}   className={`hover:shadow-lg transition-shadow flex flex-col "bg-background" ${
               !service.enabled ? "opacity-70 bg-muted" : "bg-background"
             }`}>
               <CardHeader className="flex flex-row justify-between items-center">
-                <CardTitle>{service.name.split("-")[0]}</CardTitle>
+                <CardTitle className="text-lg font-semibold">{service.name.split("-")[0]}</CardTitle>
 
                 <Dialog>
                     <DialogTrigger asChild>
@@ -133,7 +133,7 @@ const handleDeleteService = async (id: string) => {
                
               </CardHeader>
               <CardContent className="flex flex-col h-full">
-                <div className="flex-grow min-h-9 max-h-20 justify-center items-center overflow-y-scroll">
+                <div className="flex-grow min-h-9 max-h-20 justify-center items-center overflow-y-scroll flex bg-muted px-3 py-1 rounded-lg">
                 {service.description.split(";").map((descLine: string) => (
                               <p className="text-muted-foreground whitespace-pre-line h-max" key={descLine}>
                                  {descLine}
@@ -141,7 +141,7 @@ const handleDeleteService = async (id: string) => {
                            ))}
                 </div>
              
-                <div className="flex justify-between items-center mt-auto border-t pt-2">
+                <div className="flex justify-between items-center mt-4 border-t pt-2">
                   <p className="text-sm text-muted-foreground mr-2.5">R$ {service.price}</p>
                   <p className="text-sm text-muted-foreground">⏳ {service.duration} h</p>
 

@@ -10,8 +10,6 @@ import {
   LayoutDashboard,
   WorkflowIcon,
 } from "lucide-react"
-import Cookies from "js-cookie"
-
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
 import { TeamSwitcher } from "@/components/team-switcher"
@@ -22,7 +20,6 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import { useAuth } from "@/app/auth/context/auth-context"
 // This is sample data.
 const data = {
   user: {
@@ -61,7 +58,7 @@ const data = {
     },
     {
       title: "Horários",
-      url: "#",
+      url: "/admin/pages/availability",
       icon: Clock10Icon
     },
     {
@@ -74,20 +71,10 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   
-  const { name, business_name } = useAuth()
-  const namec = Cookies.get("name")
-  const business_namec = Cookies.get("business_name")
-  const team = [
-    {
-      name: business_name || business_namec || "Empresa",
-      logo: GalleryVerticalEnd,
-      plan: name || namec || "Free",
-    },
-  ]
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={team} />
+        <TeamSwitcher />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
