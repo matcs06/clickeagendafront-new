@@ -20,14 +20,14 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { UserAvatar } from "./ui/iconize";
 import { TeamSwitcher } from "@/components/team-switcher";
-
+import Cookies from "js-cookie";
 // This is sample data.
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    email: Cookies.get("user_name") || "Usuário",
+    avatar: <UserAvatar name={Cookies.get("user_name")}/>,
   },
   teams: [
     {
