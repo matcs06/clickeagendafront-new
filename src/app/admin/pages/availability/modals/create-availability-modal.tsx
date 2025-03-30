@@ -13,6 +13,7 @@ import { format } from "date-fns";
 import Cookies from "js-cookie";
 import { validateAfternoonTime, validateMorningTime } from "@/lib/utils";
 import api from "@/api/api";
+import { useAuth } from "@/app/auth/context/auth-context";
 
 interface CreateAvailabilityModalProps {
   onAvailabilityCreated: () => void;
@@ -29,7 +30,8 @@ export default function CreateAvailabilityModal({ onAvailabilityCreated }: Creat
   const [picketDate, setPickedDate] = useState(new Date())
   const [formatedDate, setFormatedDate] = useState("Selecione uma data")
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const {refreshBeforeRequest} = useAuth()
+  
   const addZero = (value:any) => {
 
     if (value < 10) {
@@ -40,7 +42,6 @@ export default function CreateAvailabilityModal({ onAvailabilityCreated }: Creat
 
   const handleCreateAvailability = async () => {
 
-
     setLoading(true);
     try {
 
@@ -48,7 +49,11 @@ export default function CreateAvailabilityModal({ onAvailabilityCreated }: Creat
         validateAfternoonTime(afternoonStart, afternoonEnd)
 
         const user_id = Cookies.get("user_id");
-        const token = Cookies.get("token");
+        let token = Cookies.get("token");
+  
+        await refreshBeforeRequest(token)
+  
+        token = Cookies.get("token");
 
         let morning_start_time = ""
         let morning_end_time = ""
@@ -85,8 +90,11 @@ export default function CreateAvailabilityModal({ onAvailabilityCreated }: Creat
         });
         toast.success(`Horário na data ${formatedDate} criado com sucesso`);
         onAvailabilityCreated();
-     } catch {
-       toast.error("Erro ao criar novo horário: Verifique se já não existe um horário na mesma data");
+     } catch(error:any) {
+        if(error.response.data.message != "token_expired"){
+          toast.error("Erro ao remover disponibilidades.");
+        }
+        toast.error("Erro ao criar novo horário: Verifique se já não existe um horário na mesma data");
      }
   };
 

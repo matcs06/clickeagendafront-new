@@ -1,4 +1,5 @@
 "use client";
+import {jwtDecode} from "jwt-decode";
 
 import { createContext, useContext, useState, useEffect } from "react";
 import Cookies from "js-cookie";
@@ -14,7 +15,7 @@ interface AuthContextType {
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
   authenticateWithGoogle: (user_name:string, token:string, user_id:string, name:string) => void;
-  refreshToken: (error:string) => Promise<boolean>;
+  refreshBeforeRequest: (token:string | undefined) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -64,23 +65,52 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  const refreshBeforeRequest = async (access_token:string | undefined) =>{
+    // Case 1: Token is missing
+    let refreshed;
+    if (!access_token) {
+      console.log("Token missing, refreshing...");
+      refreshed = await refreshToken("token_expired");
+      if (!refreshed) throw new Error("User not authenticated");
+    }else{
+      // Case 2: Token exists but is expired
+      if (isTokenExpired(access_token)) {
+        console.log("Token expired, refreshing...");
+        const refreshed = await refreshToken("token_expired");
+        if (!refreshed) throw new Error("User not authenticated");
+      }
+    }
+    
+  }
+
+  const isTokenExpired = (token: string) => {
+    try {
+      const decoded: { exp: number } = jwtDecode(token);
+      return decoded.exp * 1000 < Date.now(); // Convert `exp` to milliseconds and compare
+    } catch {
+      return true; // If decoding fails, treat it as expired
+    }
+  };
+
   const refreshToken = async (error: string) => {
     console.log("Token expirado, tentando atualizar...")
     if(error == "token_expired"){
       try {
         const response = await api.post("/tokens/refresh", {}, { withCredentials: true });
         // Set token to expire in 15 minutes
-        Cookies.set("token", response.data.access_token, { expires: 1 / 96 }); // 1/96 of a day = 15 minutes
-        console.log("token atualizado com sucesso")
-        return true
+        const newToken = response.data.access_token;
+        if (newToken) {
+          Cookies.set("token", newToken, { expires: 1 / 96 }); // 1/96 of a day = 15 minutes
+          console.log("token atualizado com sucesso")
+          return true;
+        }
+       
       } catch (error) {
         console.error("Error refreshing token:", error);
-        return false
       }
     }
- 
     return false
-  };
+   };
 
   const logout = async () => {
     // Clear authentication data
@@ -110,7 +140,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user_name,access_token, user_id, name, business_name, login, logout, authenticateWithGoogle, refreshToken }}>
+    <AuthContext.Provider value={{ user_name,access_token, user_id, name, business_name, login, logout, authenticateWithGoogle, refreshBeforeRequest }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,6 +1,7 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import dynamic from "next/dynamic";
+import * as React from "react";
 import {
   AudioWaveform,
   CalendarFold,
@@ -9,17 +10,18 @@ import {
   GalleryVerticalEnd,
   LayoutDashboard,
   WorkflowIcon,
-} from "lucide-react"
-import { NavMain } from "@/components/nav-main"
-import { NavUser } from "@/components/nav-user"
-import { TeamSwitcher } from "@/components/team-switcher"
+} from "lucide-react";
+import { NavMain } from "@/components/nav-main";
+import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
+import { TeamSwitcher } from "@/components/team-switcher";
+
 // This is sample data.
 const data = {
   user: {
@@ -49,28 +51,28 @@ const data = {
       title: "Dashboard",
       url: "/pages/dashboard",
       icon: LayoutDashboard,
-      isActive: true
+      isActive: true,
     },
     {
       title: "Serviços",
       url: "/admin/pages/services",
-      icon: WorkflowIcon
+      icon: WorkflowIcon,
     },
     {
       title: "Horários",
       url: "/admin/pages/availability",
-      icon: Clock10Icon
+      icon: Clock10Icon,
     },
     {
       title: "Calendário",
       url: "#",
-      icon: CalendarFold
+      icon: CalendarFold,
     },
-  ]
-}
+  ],
+};
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  
+// Define component normally
+function AppSidebarComponent({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -84,5 +86,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }
+
+// Export with SSR disabled
+export const AppSidebar = dynamic(() => Promise.resolve(AppSidebarComponent), {
+  ssr: false,
+});

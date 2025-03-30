@@ -12,6 +12,7 @@ import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from 
 import { OrbitProgress } from "react-loading-indicators";
 import CreateAvailabilityModal from "./modals/create-availability-modal";
 import { timeFormated } from "@/lib/utils";
+import { useAuth } from "@/app/auth/context/auth-context";
 
 interface Availability {
   id: string;
@@ -25,11 +26,20 @@ interface Availability {
 export default function Availabilities() {
   const [loading, setLoading] = useState(true);
   const queryClient = useQueryClient();
+  const {refreshBeforeRequest} = useAuth()
+  
 
-  const fetchAvailabilities = async () => {
+  const fetchAvailabilities = async (): Promise<Availability[] | undefined> => {
+
+
     try {
-      const token = Cookies.get("token");
+
       const user_id = Cookies.get("user_id");
+      let token = Cookies.get("token");
+      await refreshBeforeRequest(token)
+
+      token = Cookies.get("token");
+
       if (!token || !user_id) throw new Error("User not authenticated");
 
       const response = await api.get(`/availability?user_id=${user_id}`, {
@@ -38,9 +48,8 @@ export default function Availabilities() {
       });
 
       return response.data ?? [];
-    } catch (error) {
-      console.error("Erro ao buscar disponibilidades:", error);
-      return [];
+    } catch  {
+        toast.error("Erro ao listar disponibilidades.");
     } finally {
       setLoading(false);
     }
@@ -54,9 +63,11 @@ export default function Availabilities() {
   if (error) return toast.error("Erro ao buscar disponibilidades.");
 
   const handleDeleteAvailability = async (id: string) => {
+
     try {
-      const token = Cookies.get("token");
-      if (!token) throw new Error("User not authenticated");
+      let token = Cookies.get("token");
+      await refreshBeforeRequest(token)
+      token = Cookies.get("token");
 
       await api.delete(`/availability/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -65,9 +76,11 @@ export default function Availabilities() {
 
       toast.success("Disponibilidade excluída com sucesso!");
       queryClient.invalidateQueries({ queryKey: ["availabilities"] });
-    } catch (error) {
-      console.error("Erro ao excluir disponibilidade:", error);
-      toast.error("Erro ao excluir disponibilidade.");
+    } catch (error:any) {
+      if(error.response.data.message != "token_expired"){
+        toast.error("Erro ao remover disponibilidades.");
+      }
+      console.error("Error removing disponibilidates:", error.response.data.message);
     }
   };
 
@@ -92,7 +105,7 @@ export default function Availabilities() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 min-h-[200px]">
         {!loading &&
-          availabilities.map((availability: Availability) => (
+          availabilities?.map((availability: Availability) => (
             <Card key={availability.id} className={`hover:shadow-lg transition-shadow flex flex-col bg-background`}>
               <CardHeader>
                   <div className="text-center mb-2">

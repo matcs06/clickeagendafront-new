@@ -26,14 +26,11 @@ export default function UpdateServiceModal({ onServiceCreated, service }: Update
   const [enabled, setIsEnabled] = useState(service.enabled);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
-  const {refreshToken} = useAuth()
+  const {refreshBeforeRequest} = useAuth()
 
-  const handleUpdateService = async (retry = 0) => {
+  const handleUpdateService = async () => {
 
-    if (retry > 1) {
-      console.log("Erro ao atualizar servico, tente novamente")
-      return;
-    }
+   
     const newErrors: { [key: string]: boolean } = {
       name: !name,
       description: !description,
@@ -49,7 +46,12 @@ export default function UpdateServiceModal({ onServiceCreated, service }: Update
     setLoading(true);
     try {
       const user_id = Cookies.get("user_id");
-      const token = Cookies.get("token");
+      let token = Cookies.get("token");
+
+      await refreshBeforeRequest(token)
+
+      token = Cookies.get("token");
+
       await axios.patch(
         "http://localhost:3333/products/" + service.id,
         { name: name + "-" + user_id, description, price, duration, user_id, enabled },
@@ -59,17 +61,9 @@ export default function UpdateServiceModal({ onServiceCreated, service }: Update
         duration: 3000,
       });
       onServiceCreated();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-        if(await refreshToken(error.response.data.message)){
-          handleUpdateService(retry + 1)
-        }
-        
         console.error("Error updating service:", error.response.data.message);
-        if(error.response.data.message != "token_expired"){
-          toast.error("Erro ao atualizar serviço.");
-        }
-      
+        toast.error("Erro ao atualizar serviço.");
     } finally {
       setLoading(false);
     }
@@ -148,7 +142,7 @@ export default function UpdateServiceModal({ onServiceCreated, service }: Update
           <label htmlFor="enabled">{enabled ? "Habilitado" : "Desabilitado"}</label>
         </div>
         
-        <Button onClick={()=>handleUpdateService(0)} disabled={loading} className="w-full cursor-pointer">
+        <Button onClick={handleUpdateService} disabled={loading} className="w-full cursor-pointer">
           {loading ? "Atualizando..." : "Atualizar Serviço"}
         </Button>
       </div>

@@ -22,14 +22,10 @@ export default function CreateServiceModal({ onServiceCreated }: CreateServiceMo
   const [duration, setDuration] = useState("");
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
-  const {refreshToken} = useAuth()
+  const {refreshBeforeRequest} = useAuth()
 
-  const handleCreateService = async (retry = 0) => {
+  const handleCreateService = async () => {
 
-    if (retry > 1) {
-      console.log("Erro ao atualizar servico, tente novamente")
-      return;
-    }
     const newErrors: { [key: string]: boolean } = {
       name: !name,
       description: !description,
@@ -45,7 +41,11 @@ export default function CreateServiceModal({ onServiceCreated }: CreateServiceMo
     setLoading(true);
     try {
       const user_id = Cookies.get("user_id");
-      const token = Cookies.get("token");
+      let token = Cookies.get("token");
+
+      await refreshBeforeRequest(token)
+
+      token = Cookies.get("token");
 
       await axios.post(
         `http://localhost:3333/products`,
@@ -57,18 +57,12 @@ export default function CreateServiceModal({ onServiceCreated }: CreateServiceMo
       });
       onServiceCreated();
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error:any) {
 
-      if(await refreshToken(error.response.data.message)){
-        handleCreateService(retry + 1)
-      }
       console.error("Error creating service:", error.response.data.message);
       
-      if(error.response.data.message != "token_expired"){
-        toast.error("Erro ao criar serviço.");
-      }
-
+      toast.error("Erro ao criar serviço.");
+    
     } finally {
       setLoading(false);
     }
@@ -132,7 +126,7 @@ export default function CreateServiceModal({ onServiceCreated }: CreateServiceMo
           </div>
         </div>
         
-        <Button onClick={()=> handleCreateService(0)} disabled={loading} className="cursor-pointer w-full">
+        <Button onClick={handleCreateService} disabled={loading} className="cursor-pointer w-full">
           {loading ? "Criando..." : "Criar Serviço"}
         </Button>
       </div>

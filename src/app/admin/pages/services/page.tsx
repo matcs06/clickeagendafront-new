@@ -30,92 +30,71 @@ interface Service {
 export default function Services() {
   const [loading, setLoading] = useState(true);
   const queryClient = useQueryClient();
-  const {refreshToken} = useAuth()
+  const {refreshBeforeRequest} = useAuth()
 
-  const fetchServices = async (retry = 0) => {
-
-    if (retry > 1) {
-      console.log("Erro ao atualizar servico, tente novamente")
-      return;
-    }
+  const fetchServices = async (): Promise<Service[] | undefined> => {
+    console.log("entrou no fetch");
+  
     try {
-      const token = Cookies.get("token");
+      let token = Cookies.get("token");
       const user_id = Cookies.get("user_id");
-  
-      if (!token || !user_id) throw new Error("User not authenticated");
-  
+    
+      await refreshBeforeRequest(token)
+
+      token = Cookies.get("token");
+
+
       const response = await api.get(`/products?user_id=${user_id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+      });
+  
+      return response.data ?? []; // ✅ Always return an array
+    } catch (error: any) {
+      console.error("Error fetching service:", error.response?.data?.message);
+      toast.error("Erro ao listar serviço.");
+      throw error;
+    }finally{
+      setLoading(false)
+    }
+  };
+  
+  const { data: services, error, isLoading } = useQuery({
+    queryKey: ["services"],
+    queryFn: fetchServices, // ✅ Ensures async handling
+  });
+  
+
+  if (error) return toast.error("Erro ao buscar serviços.");
+
+  const handleDeleteService = async (id: string) => {
+
+    try {
+      let token = Cookies.get("token");
+
+      await refreshBeforeRequest(token)
+
+      token = Cookies.get("token");
+
+      if (!token) throw new Error("User not authenticated");
+
+      await api.delete(`/products/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
         withCredentials: true, // Ensures cookies are sent if needed
       });
-  
-      return response.data ?? []; // Ensure an array is always returned
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+      toast.success("Serviço excluído com sucesso!", {
+        duration: 3000,
+      });
+
+      queryClient.invalidateQueries({ queryKey: ["services"] });
     } catch (error:any) {
-      if(await refreshToken(error.response.data.message)){
-        fetchServices(retry + 1)
-      }
-      console.error("Error fetching service:", error.response.data.message);
-      
-      if(error.response.data.message != "token_expired"){
-        toast.error("Erro ao listar serviço.");
-      }
-      console.error("Erro ao buscar serviços:", error);
-      return []; // Fallback to empty array on error
-    } finally {
-      setLoading(false);
+        toast.error("Erro ao remover serviço.");
+        console.error("Error removing service:", error.response.data.message);
     }
   };
-
-  const { data: services, error, isLoading } = useQuery({
-    queryKey: ["services"],
-    queryFn: ()=> fetchServices(0),
-    },
-  );
-
-  if (error) return toast.error("Erro ao buscar serviços.");
-
-const handleDeleteService = async (id: string, retry = 0) => {
-
-  if (retry > 1) {
-    console.log("Erro ao atualizar servico, tente novamente")
-    return;
-  }
-
-  try {
-    const token = Cookies.get("token");
-
-    if (!token) throw new Error("User not authenticated");
-
-    await api.delete(`/products/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      withCredentials: true, // Ensures cookies are sent if needed
-    });
-
-    toast.success("Serviço excluído com sucesso!", {
-      duration: 3000,
-    });
-
-    queryClient.invalidateQueries({ queryKey: ["services"] });
-    
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error:any) {
-
-    if(await refreshToken(error.response.data.message)){
-      handleDeleteService(id, retry + 1)
-    }
-    
-    console.error("Error removing service:", error.response.data.message);
-    if(error.response.data.message != "token_expired"){
-      toast.error("Erro ao remover serviço.");
-    }
-
-  }
-};
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
@@ -139,7 +118,7 @@ const handleDeleteService = async (id: string, retry = 0) => {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 min-h-[200px]">
       {loading == false && (
-          services.map((service: Service) => (
+          services?.map((service: Service) => (
             <Card key={service.id}   className={`hover:shadow-lg transition-shadow flex flex-col bg-background min-w-52 flex-grow ${
               !service.enabled ? "opacity-70 bg-muted" : "bg-background"
             }`}>
@@ -182,7 +161,7 @@ const handleDeleteService = async (id: string, retry = 0) => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => handleDeleteService(service.id, 0)}
+                    onClick={() => handleDeleteService(service.id)}
                     className="cursor-pointer text-destructive hover:bg-destructive/10 hover:text-destructive-foreground"
                     >
                     <Trash className="h-5 w-5" />
