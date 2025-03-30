@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import axios from "axios";
 import { toast } from "sonner"; // Import the toast library
 import Cookies from "js-cookie";
+import { useAuth } from "@/app/auth/context/auth-context";
 
 
 interface UpdateServiceModalProps {
@@ -25,8 +26,14 @@ export default function UpdateServiceModal({ onServiceCreated, service }: Update
   const [enabled, setIsEnabled] = useState(service.enabled);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
+  const {refreshToken} = useAuth()
 
-  const handleUpdateService = async () => {
+  const handleUpdateService = async (retry = 0) => {
+
+    if (retry > 1) {
+      console.log("Erro ao atualizar servico, tente novamente")
+      return;
+    }
     const newErrors: { [key: string]: boolean } = {
       name: !name,
       description: !description,
@@ -54,8 +61,15 @@ export default function UpdateServiceModal({ onServiceCreated, service }: Update
       onServiceCreated();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      console.error("Error updating service:", error.response.data.message);
-      toast.error("Erro ao atualizar serviço.");
+        if(await refreshToken(error.response.data.message)){
+          handleUpdateService(retry + 1)
+        }
+        
+        console.error("Error updating service:", error.response.data.message);
+        if(error.response.data.message != "token_expired"){
+          toast.error("Erro ao atualizar serviço.");
+        }
+      
     } finally {
       setLoading(false);
     }
@@ -134,7 +148,7 @@ export default function UpdateServiceModal({ onServiceCreated, service }: Update
           <label htmlFor="enabled">{enabled ? "Habilitado" : "Desabilitado"}</label>
         </div>
         
-        <Button onClick={handleUpdateService} disabled={loading} className="w-full cursor-pointer">
+        <Button onClick={()=>handleUpdateService(0)} disabled={loading} className="w-full cursor-pointer">
           {loading ? "Atualizando..." : "Atualizar Serviço"}
         </Button>
       </div>

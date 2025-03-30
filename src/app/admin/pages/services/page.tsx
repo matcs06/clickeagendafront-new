@@ -15,6 +15,7 @@ import {OrbitProgress} from "react-loading-indicators"
 import { Trash } from "lucide-react"; // Certifique-se de instalar o pacote lucide-react
 import UpdateServiceModal from "./modals/update-service-modal";
 import CreateServiceModal from "./modals/create-service-modal";
+import { useAuth } from "@/app/auth/context/auth-context";
 
 interface Service {
   id: string;
@@ -29,8 +30,14 @@ interface Service {
 export default function Services() {
   const [loading, setLoading] = useState(true);
   const queryClient = useQueryClient();
+  const {refreshToken} = useAuth()
 
-  const fetchServices = async () => {
+  const fetchServices = async (retry = 0) => {
+
+    if (retry > 1) {
+      console.log("Erro ao atualizar servico, tente novamente")
+      return;
+    }
     try {
       const token = Cookies.get("token");
       const user_id = Cookies.get("user_id");
@@ -45,8 +52,16 @@ export default function Services() {
       });
   
       return response.data ?? []; // Ensure an array is always returned
-  
-    } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error:any) {
+      if(await refreshToken(error.response.data.message)){
+        fetchServices(retry + 1)
+      }
+      console.error("Error fetching service:", error.response.data.message);
+      
+      if(error.response.data.message != "token_expired"){
+        toast.error("Erro ao listar serviço.");
+      }
       console.error("Erro ao buscar serviços:", error);
       return []; // Fallback to empty array on error
     } finally {
@@ -56,13 +71,19 @@ export default function Services() {
 
   const { data: services, error, isLoading } = useQuery({
     queryKey: ["services"],
-    queryFn: fetchServices,
+    queryFn: ()=> fetchServices(0),
     },
   );
 
   if (error) return toast.error("Erro ao buscar serviços.");
 
-const handleDeleteService = async (id: string) => {
+const handleDeleteService = async (id: string, retry = 0) => {
+
+  if (retry > 1) {
+    console.log("Erro ao atualizar servico, tente novamente")
+    return;
+  }
+
   try {
     const token = Cookies.get("token");
 
@@ -80,10 +101,19 @@ const handleDeleteService = async (id: string) => {
     });
 
     queryClient.invalidateQueries({ queryKey: ["services"] });
+    
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error:any) {
 
-  } catch (error) {
-    console.error("Erro ao excluir serviço:", error);
-    toast.error("Erro ao excluir serviço.");
+    if(await refreshToken(error.response.data.message)){
+      handleDeleteService(id, retry + 1)
+    }
+    
+    console.error("Error removing service:", error.response.data.message);
+    if(error.response.data.message != "token_expired"){
+      toast.error("Erro ao remover serviço.");
+    }
+
   }
 };
 
@@ -110,7 +140,7 @@ const handleDeleteService = async (id: string) => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 min-h-[200px]">
       {loading == false && (
           services.map((service: Service) => (
-            <Card key={service.id}   className={`hover:shadow-lg transition-shadow flex flex-col "bg-background" ${
+            <Card key={service.id}   className={`hover:shadow-lg transition-shadow flex flex-col bg-background min-w-52 flex-grow ${
               !service.enabled ? "opacity-70 bg-muted" : "bg-background"
             }`}>
               <CardHeader className="flex flex-row justify-between items-center">
@@ -133,12 +163,16 @@ const handleDeleteService = async (id: string) => {
                
               </CardHeader>
               <CardContent className="flex flex-col h-full">
-                <div className="flex-grow min-h-9 max-h-20 justify-center items-center overflow-y-scroll flex bg-muted px-3 py-1 rounded-lg">
-                {service.description.split(";").map((descLine: string) => (
-                              <p className="text-muted-foreground whitespace-pre-line h-max" key={descLine}>
+              
+
+                <div className="flex-grow bg-muted px-3 pt-4 rounded-lg">
+                  <div className="h-24 max-h-24 overflow-y-auto flex items-center justify-center">
+                    {service.description.split(";").map((descLine: string) => (
+                              <p className="text-sm text-muted-foreground whitespace-pre-line" key={descLine}>
                                  {descLine}
                               </p>
-                           ))}
+                           ))}                    
+                  </div>
                 </div>
              
                 <div className="flex justify-between items-center mt-4 border-t pt-2">
@@ -148,7 +182,7 @@ const handleDeleteService = async (id: string) => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => handleDeleteService(service.id)}
+                    onClick={() => handleDeleteService(service.id, 0)}
                     className="cursor-pointer text-destructive hover:bg-destructive/10 hover:text-destructive-foreground"
                     >
                     <Trash className="h-5 w-5" />
@@ -179,3 +213,5 @@ const handleDeleteService = async (id: string) => {
     </div>
   );
 }
+
+

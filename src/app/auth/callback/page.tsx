@@ -31,7 +31,7 @@ export default function GoogleCallback() {
       }
 
       // Send the token to your backend for verification
-      api.post("/sessions/google", { google_id_token: id_token })
+      api.post("/sessions/google", { google_id_token: id_token }, {withCredentials: true})
       .then((response) => {
         const { access_token, user } = response.data;
 

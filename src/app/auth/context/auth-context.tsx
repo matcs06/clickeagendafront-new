@@ -14,7 +14,7 @@ interface AuthContextType {
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => void;
   authenticateWithGoogle: (user_name:string, token:string, user_id:string, name:string) => void;
-  refreshToken: () => void;
+  refreshToken: (error:string) => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -44,12 +44,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = async (username: string, password: string) => {
     try {
-      const response = await api.post("/sessions", { username, password });
+      const response = await api.post("/sessions", { username, password }, {withCredentials:true});
 
       if (!response.data) throw new Error("Invalid credentials");
 
       const data = await response.data;
-      Cookies.set("token", data.access_token, { expires: 7 }); // Stores token for 7 days
+      Cookies.set("token", data.access_token, { expires: 1 / 96 }); // 1/96 of a day = 15 minutes
       Cookies.set("user_id", data.user.user_id, { expires: 7 }); // Store user_id
       Cookies.set("name", data.user.name, { expires: 7 }); // Store user_name
       Cookies.set("user_name", data.user.user_name, { expires: 7 }); // Store user_name
@@ -64,20 +64,29 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const refreshToken = async () => {
-    try {
-      const response = await api.post("/refresh/token", {}, { withCredentials: true });
-  
-      // Set token to expire in 15 minutes
-      Cookies.set("token", response.data.access_token, { expires: 1 / 96 }); // 1/96 of a day = 15 minutes
-  
-    } catch (error) {
-      console.error("Error refreshing token:", error);
+  const refreshToken = async (error: string) => {
+    console.log("Token expirado, tentando atualizar...")
+    if(error == "token_expired"){
+      try {
+        const response = await api.post("/tokens/refresh", {}, { withCredentials: true });
+        // Set token to expire in 15 minutes
+        Cookies.set("token", response.data.access_token, { expires: 1 / 96 }); // 1/96 of a day = 15 minutes
+        console.log("token atualizado com sucesso")
+        return true
+      } catch (error) {
+        console.error("Error refreshing token:", error);
+        return false
+      }
     }
+ 
+    return false
   };
 
-  const logout = () => {
+  const logout = async () => {
     // Clear authentication data
+
+    await api.post("tokens/logout", {}, {withCredentials: true})
+
     Cookies.remove("token");
     Cookies.remove("user_id");
     Cookies.remove("name");
@@ -93,7 +102,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const authenticateWithGoogle = async (user_name:string, token:string, user_id:string, name:string)  => { 
-    Cookies.set("token", token, { expires: 7 }); // Stores token for 7 days
+    Cookies.set("token", token, { expires: 1 / 96 }); // 1/96 of a day = 15 minutes
     Cookies.set("user_id", user_id, { expires: 7 }); // Store user_id
     Cookies.set("name", name, { expires: 7 }); // Store user_name
     Cookies.set("user_name", user_name, { expires: 7 }); // Store user_name

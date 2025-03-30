@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -34,8 +35,8 @@ export default function CreateAvailabilityModal({ onAvailabilityCreated }: Creat
     if (value < 10) {
        value = '0' + value;
     }
-    return value
- }
+    return value;
+  };
 
   const handleCreateAvailability = async () => {
 
@@ -83,11 +84,9 @@ export default function CreateAvailabilityModal({ onAvailabilityCreated }: Creat
            },
         });
         toast.success(`Horário na data ${formatedDate} criado com sucesso`);
-        onAvailabilityCreated()
+        onAvailabilityCreated();
      } catch {
-        toast.error(
-           "erro ao criar novo horário: Verfifique se já não existe um horário na mesma data"
-        );
+       toast.error("Erro ao criar novo horário: Verifique se já não existe um horário na mesma data");
      }
   };
 

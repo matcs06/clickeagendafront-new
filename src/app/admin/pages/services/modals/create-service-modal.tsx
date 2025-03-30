@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import axios from "axios";
 import { toast } from "sonner"; // Import the toast library
 import Cookies from "js-cookie";
+import { useAuth } from "@/app/auth/context/auth-context";
 
 
 interface CreateServiceModalProps {
@@ -21,8 +22,14 @@ export default function CreateServiceModal({ onServiceCreated }: CreateServiceMo
   const [duration, setDuration] = useState("");
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
+  const {refreshToken} = useAuth()
 
-  const handleCreateService = async () => {
+  const handleCreateService = async (retry = 0) => {
+
+    if (retry > 1) {
+      console.log("Erro ao atualizar servico, tente novamente")
+      return;
+    }
     const newErrors: { [key: string]: boolean } = {
       name: !name,
       description: !description,
@@ -49,9 +56,18 @@ export default function CreateServiceModal({ onServiceCreated }: CreateServiceMo
         duration: 3000,
       });
       onServiceCreated();
-    } catch (error) {
-      console.error("Error creating service:", error);
-      toast.error("Erro ao criar serviço.");
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error:any) {
+
+      if(await refreshToken(error.response.data.message)){
+        handleCreateService(retry + 1)
+      }
+      console.error("Error creating service:", error.response.data.message);
+      
+      if(error.response.data.message != "token_expired"){
+        toast.error("Erro ao criar serviço.");
+      }
 
     } finally {
       setLoading(false);
@@ -116,7 +132,7 @@ export default function CreateServiceModal({ onServiceCreated }: CreateServiceMo
           </div>
         </div>
         
-        <Button onClick={handleCreateService} disabled={loading} className="cursor-pointer w-full">
+        <Button onClick={()=> handleCreateService(0)} disabled={loading} className="cursor-pointer w-full">
           {loading ? "Criando..." : "Criar Serviço"}
         </Button>
       </div>
