@@ -90,9 +90,10 @@ export default function CreateAvailabilityModal({ onAvailabilityCreated }: Creat
         });
         toast.success(`Horário na data ${formatedDate} criado com sucesso`);
         onAvailabilityCreated();
+        setLoading(false)
      } catch(error:any) {
         if(error.response.data.message != "token_expired"){
-          toast.error("Erro ao remover disponibilidades.");
+          toast.error("Erro ao criar Horários.");
         }
         toast.error("Erro ao criar novo horário: Verifique se já não existe um horário na mesma data");
      }
@@ -112,12 +113,13 @@ const handlePickedDate = (selectedDate: Date | undefined) => {
 
   const formatedDate = day + "/" + month + "/" + year;
   setFormatedDate(formatedDate);
+  console.log(formatedDate)
 };
 
   return (
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>Criar Disponibilidade</DialogTitle>
+        <DialogTitle>Criar Horário</DialogTitle>
       </DialogHeader>
 
       {/* Seletor de Data */}
@@ -189,7 +191,7 @@ const handlePickedDate = (selectedDate: Date | undefined) => {
 
       {/* Botão Criar */}
       <Button onClick={handleCreateAvailability} disabled={loading} className="w-full cursor-pointer">
-        {loading ? "Criando..." : "Criar Disponibilidade"}
+        {loading ? "Criando..." : "Criar Horário"}
       </Button>
     </DialogContent>
   );

@@ -49,7 +49,7 @@ export default function Availabilities() {
 
       return response.data ?? [];
     } catch  {
-        toast.error("Erro ao listar disponibilidades.");
+        toast.error("Erro ao listar Horários.");
     } finally {
       setLoading(false);
     }
@@ -60,7 +60,7 @@ export default function Availabilities() {
     queryFn: fetchAvailabilities,
   });
 
-  if (error) return toast.error("Erro ao buscar disponibilidades.");
+  if (error) return toast.error("Erro ao buscar Horários.");
 
   const handleDeleteAvailability = async (id: string) => {
 
@@ -74,11 +74,11 @@ export default function Availabilities() {
         withCredentials: true,
       });
 
-      toast.success("Disponibilidade excluída com sucesso!");
+      toast.success("Horário excluída com sucesso!");
       queryClient.invalidateQueries({ queryKey: ["availabilities"] });
     } catch (error:any) {
       if(error.response.data.message != "token_expired"){
-        toast.error("Erro ao remover disponibilidades.");
+        toast.error("Erro ao remover Horários.");
       }
       console.error("Error removing disponibilidates:", error.response.data.message);
     }
@@ -87,16 +87,16 @@ export default function Availabilities() {
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-10 border-b pb-5">
-        <h3 className="text-xl font-semibold mr-7 text-foreground">Disponibilidades</h3>
+        <h3 className="text-xl font-semibold mr-7 text-foreground">Horários</h3>
         <Dialog>
           <DialogTrigger asChild>
             <Button className="flex gap-2 cursor-pointer">
-              <Plus size={16} /> Nova Disponibilidade
+              <Plus size={16} /> Novo Horário
             </Button>
           </DialogTrigger>
           <DialogContent className="flex justify-center items-center">
             <DialogHeader>
-              <DialogTitle>Criar Nova Disponibilidade</DialogTitle>
+              <DialogTitle>Criar Novo Horário</DialogTitle>
             </DialogHeader>
             <CreateAvailabilityModal onAvailabilityCreated={() => queryClient.invalidateQueries({ queryKey: ["availabilities"] })} />
           </DialogContent>

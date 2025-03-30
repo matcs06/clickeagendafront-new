@@ -144,14 +144,10 @@ export default function Services() {
               <CardContent className="flex flex-col h-full">
               
 
-                <div className="flex-grow bg-muted px-3 pt-4 rounded-lg">
-                  <div className="h-24 max-h-24 overflow-y-auto flex items-center justify-center">
-                    {service.description.split(";").map((descLine: string) => (
-                              <p className="text-sm text-muted-foreground whitespace-pre-line" key={descLine}>
-                                 {descLine}
-                              </p>
-                           ))}                    
-                  </div>
+                <div className="overflow-hidden overflow-y-scroll min-h-32 max-h-32 bg-muted px-3 pt-4 rounded-lg pb-2.5">
+                    <p className="text-sm font-semibold text-muted-foreground whitespace-pre-line">
+                        {service.description}
+                    </p>
                 </div>
              
                 <div className="flex justify-between items-center mt-4 border-t pt-2">
