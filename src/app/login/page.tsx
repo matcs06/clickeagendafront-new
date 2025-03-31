@@ -13,9 +13,9 @@ import { useAuth } from "@/app/auth/context/auth-context"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import {  useRouter } from "next/navigation";
+import Cookies from "js-cookie"
 declare global {
   interface Window {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
     google: any;
   }
 }
@@ -25,14 +25,18 @@ export default function LoginPage() {
   const { login } = useAuth();
   
   const router = useRouter();
-  const [credentials, setCredentials] = useState({ username: "", password: "" });
+  const [credentials, setCredentials] = useState({ username_or_email: "", password: "" });
   const [nonce, setNonce] = useState("")
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const success = await login(credentials.username, credentials.password);
+    const success = await login(credentials.username_or_email, credentials.password);
     if (success) {
-      router.push("/pages/dashboard");
+      if(Cookies.get("business_name") == null || Cookies.get("phone") == null){
+        router.push("/admin/pages/addinfo")
+      }else{
+        router.push("/pages/dashboard");
+      }
     } else {
       toast.error("Usuário ou senha inválidos.");
     }
@@ -64,6 +68,10 @@ export default function LoginPage() {
 
   };
 
+  const handleSignUp = ()=>{
+    router.push("/signin");
+
+  }
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
@@ -80,11 +88,11 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-3">
-                <Label htmlFor="username">Usuário</Label>
+                <Label htmlFor="username_or_email">Usuário ou Email</Label>
                 <Input
                   onChange={handleChange}
-                  id="username"
-                  name="username"
+                  id="username_or_email"
+                  name="username_or_email"
                   type="text"
                   required
                 
@@ -120,9 +128,9 @@ export default function LoginPage() {
                   Continuar com Google
             </Button>
           </div>
-          <div className="mt-4 text-center text-sm">
+          <div onClick={handleSignUp} className="mt-4 text-center text-sm">
               Não tem uma conta ainda?{" "}
-              <a href="#" className="underline underline-offset-4">
+              <a href="/signin" className="underline underline-offset-4">
                 Cadastre-se
               </a>
           </div>

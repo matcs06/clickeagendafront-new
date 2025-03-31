@@ -1,7 +1,7 @@
 "use client"
 
 import {
-  BadgeCheck,
+  Settings2Icon,
   ChevronsUpDown,
   CreditCard,
   LogOut,
@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/sidebar"
 import { useAuth } from "@/app/auth/context/auth-context"
 import { ModeToggle } from "./mode-toogle"
+import {  useRouter } from "next/navigation";
 
 export function NavUser({
   user,
@@ -37,8 +38,14 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+  const router = useRouter();
 
-  const {logout} = useAuth()
+  const {logout, setOpenAddInfo} = useAuth()
+
+  const handleAddInfo = () =>{
+    setOpenAddInfo(true)
+    router.push("/admin/pages/addinfo")  
+  }
 
   return (
     <SidebarMenu>
@@ -76,9 +83,9 @@ export function NavUser({
               </div>
             </DropdownMenuLabel>
             <DropdownMenuGroup>
-              <DropdownMenuItem className="cursor-pointer">
-                <BadgeCheck />
-                Conta
+              <DropdownMenuItem onClick={handleAddInfo} className="cursor-pointer">
+                <Settings2Icon />
+                Informações adicionais
               </DropdownMenuItem>
               <DropdownMenuItem className="cursor-pointer">
                 <CreditCard />

@@ -14,8 +14,8 @@ import {
 
 export function TeamSwitcher(){
   
-  const name = Cookies.get("name") ?? "Usuário"
-  const business_name = Cookies.get("business_name") ?? "Empresa"
+  const name = Cookies.get("name") == null ? "Nome" : Cookies.get("name")
+  const business_name = Cookies.get("business_name") == null ? "Empresa" : Cookies.get("business_name")
   
   return (
     <SidebarMenu>
@@ -29,8 +29,8 @@ export function TeamSwitcher(){
                 <Calendar className="size-4"/>
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{business_name.toString()}</span>
-                <span className="truncate font-normal">{name.toString()}</span>
+                <span className="truncate font-medium">{business_name}</span>
+                <span className="truncate font-normal">{name}</span>
               </div>
             </SidebarMenuButton>
         </DropdownMenu>

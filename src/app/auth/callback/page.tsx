@@ -37,7 +37,7 @@ export default function GoogleCallback() {
 
         if (access_token && user) {
           // Call your authenticateWithGoogle function with the necessary fields
-          authenticateWithGoogle(user.username, access_token, user.user_id, user.name);
+          authenticateWithGoogle(user.username, access_token, user.user_id, user.name, user.email);
 
           // Redirect to the dashboard
           router.push("/pages/services");
