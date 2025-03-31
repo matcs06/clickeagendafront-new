@@ -3,7 +3,7 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { VariantProps, cva } from "class-variance-authority"
-import { PanelLeftIcon } from "lucide-react"
+import { PanelLeftIcon, AlignLeftIcon } from "lucide-react"
 
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
@@ -182,7 +182,7 @@ function Sidebar({
 
   if (isMobile) {
     return (
-      <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
+      <Sheet open={openMobile} onOpenChange={setOpenMobile}   {...props}>
         <SheetContent
           data-sidebar="sidebar"
           data-slot="sidebar"
@@ -259,7 +259,7 @@ function SidebarTrigger({
   ...props
 }: React.ComponentProps<typeof Button>) {
   const { toggleSidebar } = useSidebar()
-
+  const {isMobile} = useSidebar()
   return (
     <Button
       data-sidebar="trigger"
@@ -273,7 +273,11 @@ function SidebarTrigger({
       }}
       {...props}
     >
-      <PanelLeftIcon />
+      {isMobile ? (
+        <AlignLeftIcon/>
+      ): (
+        <PanelLeftIcon size={25} />
+      )}
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   )

@@ -26,6 +26,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { useAuth } from "@/app/auth/context/auth-context"
+import { ModeToggle } from "./mode-toogle"
 
 export function NavUser({
   user,
@@ -38,8 +39,6 @@ export function NavUser({
   const { isMobile } = useSidebar()
 
   const {logout} = useAuth()
-
-  
 
   return (
     <SidebarMenu>
@@ -73,6 +72,7 @@ export function NavUser({
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate text-xs">{user.email}</span>
                 </div>
+                <ModeToggle/>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuGroup>

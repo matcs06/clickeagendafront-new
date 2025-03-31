@@ -19,6 +19,9 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
+  SidebarTrigger,
+  useSidebar,
+  //useSidebar,
 } from "@/components/ui/sidebar";
 import { UserAvatar } from "./ui/iconize";
 import { TeamSwitcher } from "@/components/team-switcher";
@@ -65,7 +68,7 @@ const data = {
     },
     {
       title: "Calendário",
-      url: "#",
+      url: "/admin/pages/schduller",
       icon: CalendarFold,
     },
   ],
@@ -73,10 +76,15 @@ const data = {
 
 // Define component normally
 function AppSidebarComponent({ ...props }: React.ComponentProps<typeof Sidebar>) {
+
+  const {state, isMobile} = useSidebar()
+  
+  
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
+      <SidebarHeader className={`flex justify-between ${state == "collapsed" && !isMobile ? "flex-col" : "flex-row"}`}>
         <TeamSwitcher />
+        <SidebarTrigger className="cursor-pointer"/>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />

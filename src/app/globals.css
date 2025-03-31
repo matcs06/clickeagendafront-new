@@ -112,6 +112,13 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+.sx-react-calendar-wrapper {
+  width: 100%; /* Take full width */
+  max-width: calc(100vw - 40px); /* Adjust by subtracting any margins/padding */
+  height: 100%;
+  max-height: 100vh;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
