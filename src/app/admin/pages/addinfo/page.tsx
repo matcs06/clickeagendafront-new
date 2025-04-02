@@ -20,20 +20,15 @@ interface User{
 }
 
 export default function CompleteProfileModal() {
-  const {updateInfo} = useAuth()
   const [form, setForm] = useState({
     business_name: "",
     phone: "",
     address: "",
     welcome_message: "",
   });
-  const {openAddInfo, setOpenAddInfo, refreshBeforeRequest} = useAuth()
+  const {updateInfo,openAddInfo, setOpenAddInfo, refreshBeforeRequest} = useAuth()
   useEffect(() => {
     // Check if business_name and phone are missing
-    if(Cookies.get("business_name") == null || Cookies.get("phone") == null){
-      setOpenAddInfo(true);
-    }
-
     const fetchUserinfo = async() =>{
       const username = Cookies.get("user_name")
   

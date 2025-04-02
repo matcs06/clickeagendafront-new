@@ -22,7 +22,7 @@ declare global {
 
 
 export default function LoginPage() {
-  const { login } = useAuth();
+  const { login, setOpenAddInfo } = useAuth();
   
   const router = useRouter();
   const [credentials, setCredentials] = useState({ username_or_email: "", password: "" });
@@ -33,6 +33,7 @@ export default function LoginPage() {
     const success = await login(credentials.username_or_email, credentials.password);
     if (success) {
       if(Cookies.get("business_name") == null || Cookies.get("phone") == null){
+        setOpenAddInfo(true)
         router.push("/admin/pages/addinfo")
       }else{
         router.push("/pages/dashboard");

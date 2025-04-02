@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { AppSidebar } from "@/components/app-sidebar"
 import { ReactNode } from "react";
 import { useMediaQuery } from "react-responsive";
-import CompleteProfileModal from "../admin/pages/addinfo/page";
 
 export function SidebarWrapper({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -13,7 +12,7 @@ export function SidebarWrapper({ children }: { children: ReactNode }) {
 
   
   // Define routes where the sidebar should be hidden
-  const authRoutes = ["/login", "/signin", "/signin/plans"];
+  const authRoutes = ["/login", "/signin"];
 
   return (
     !authRoutes.includes(pathname) ? (
@@ -24,7 +23,6 @@ export function SidebarWrapper({ children }: { children: ReactNode }) {
              <SidebarTrigger className="cursor-pointer"/>
           </div>
         )}
-                <CompleteProfileModal/>
 
         {children}
       </SidebarProvider>

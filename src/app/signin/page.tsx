@@ -80,7 +80,6 @@ export default function SignInPage() {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-   console.log(e.target.value)
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
 
