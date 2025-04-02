@@ -20,17 +20,6 @@ interface CreateAvailabilityModalProps {
 }
 
 export default function CreateAvailabilityModal({ onAvailabilityCreated }: CreateAvailabilityModalProps) {
-  const [morningStart, setMorningStart] = useState("");
-  const [morningEnd, setMorningEnd] = useState("");
-  const [afternoonStart, setafternoonStart] = useState("");
-  const [afternoonEnd, setafternoonEnd] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [openCalendar, setOpenCalendar] = useState(false);
-
-  const [picketDate, setPickedDate] = useState(new Date())
-  const [formatedDate, setFormatedDate] = useState("Selecione uma data")
-
-  const {refreshBeforeRequest} = useAuth()
   
   const addZero = (value:any) => {
 
@@ -39,6 +28,28 @@ export default function CreateAvailabilityModal({ onAvailabilityCreated }: Creat
     }
     return value;
   };
+
+  const [morningStart, setMorningStart] = useState("");
+  const [morningEnd, setMorningEnd] = useState("");
+  const [afternoonStart, setafternoonStart] = useState("");
+  const [afternoonEnd, setafternoonEnd] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [openCalendar, setOpenCalendar] = useState(false);
+
+  const [picketDate, setPickedDate] = useState(() => {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  })
+  const [formatedDate, setFormatedDate] = useState(()=>{
+    const month = picketDate.getMonth() + 1; //months from 1-12
+    const day = picketDate.getDate();
+    const year = picketDate.getFullYear();
+    return addZero(day) + "/" + addZero(month) + "/" + year;
+  })
+
+  const {refreshBeforeRequest} = useAuth()
+  
+  
 
   const handleCreateAvailability = async () => {
 
@@ -99,21 +110,14 @@ export default function CreateAvailabilityModal({ onAvailabilityCreated }: Creat
      }
   };
 
+
 const handlePickedDate = (selectedDate: Date | undefined) => {
   if (!selectedDate) return;
   setPickedDate(selectedDate);
   setOpenCalendar(false);
 
-  let month = selectedDate.getMonth() + 1; //months from 1-12
-  let day = selectedDate.getDate();
-  const year = selectedDate.getFullYear();
+  setFormatedDate(selectedDate.toLocaleDateString("pt-BR"));
 
-  day = addZero(day);
-  month = addZero(month);
-
-  const formatedDate = day + "/" + month + "/" + year;
-  setFormatedDate(formatedDate);
-  console.log(formatedDate)
 };
 
   return (

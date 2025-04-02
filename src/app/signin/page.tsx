@@ -17,7 +17,6 @@ import { useRouter } from "next/navigation";
 
 declare global {
   interface Window {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     google: any;
   }
 }
@@ -128,7 +127,6 @@ export default function SignInPage() {
                   required
                 />
               </div>
-              
               <div className="grid gap-3">
                 <Label htmlFor="password">Senha</Label>
                 <Input 

@@ -61,7 +61,6 @@ export default function CompleteProfileModal() {
 
   const handleChange = (e:any) => {
     const { name, value } = e.target;
-    console.log(name, value)
     
     if (name === "phone") {
       // Aplica máscara de telefone (formato: (99) 99999-9999)
@@ -94,7 +93,6 @@ export default function CompleteProfileModal() {
   };
 
   const handleClose = () => {
-    console.log("close")
     setOpenAddInfo(false)
   };
 

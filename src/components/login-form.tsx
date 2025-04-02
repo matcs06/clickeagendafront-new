@@ -28,7 +28,6 @@ export function LoginForm({
     e.preventDefault();
     const success = await login(credentials.username, credentials.password);
     if (success) {
-      console.log("Login bem-sucedido!");
       router.push("/pages/dashboard");
     } else {
       toast.error("Usuário ou senha inválidos.");

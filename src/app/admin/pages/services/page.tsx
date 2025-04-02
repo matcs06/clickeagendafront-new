@@ -33,7 +33,6 @@ export default function Services() {
   const {refreshBeforeRequest} = useAuth()
 
   const fetchServices = async (): Promise<Service[] | undefined> => {
-    console.log("entrou no fetch");
   
     try {
       let token = Cookies.get("token");

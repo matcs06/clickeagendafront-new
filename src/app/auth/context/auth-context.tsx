@@ -72,7 +72,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = async (username_or_email: string, password: string) => {
     try {
-      console.log(username_or_email, password)
       const response = await api.post("/sessions", { username_or_email, password }, {withCredentials:true});
 
       if (!response.data) throw new Error("Invalid credentials");

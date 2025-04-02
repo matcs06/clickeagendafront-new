@@ -42,10 +42,11 @@ export default function Availabilities() {
 
       if (!token || !user_id) throw new Error("User not authenticated");
 
-      const response = await api.get(`/availability?user_id=${user_id}`, {
+      const response = await api.get<Availability[]>(`/availability?user_id=${user_id}`, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       });
+
 
       return response.data ?? [];
     } catch  {
@@ -110,10 +111,10 @@ export default function Availabilities() {
               <CardHeader>
                   <div className="text-center mb-2">
                      <p className="text-sm font-medium text-muted-foreground">
-                        {new Date(availability.date.split("/").reverse().join("-")).toLocaleDateString("pt-BR", { weekday: "long" })}
+                        {new Date(availability.date.split("/").reverse().join("/")).toLocaleDateString("pt-BR", { weekday: "long" })}
                      </p>
                      <p className="text-md font-semibold">
-                        {new Date(availability.date.split("/").reverse().join("-")).toLocaleDateString("pt-BR", {
+                        {new Date(availability.date.split("/").reverse().join("/")).toLocaleDateString("pt-BR", {
                         day: "numeric",
                         month: "long",
                         year: "numeric",
