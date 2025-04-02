@@ -33,11 +33,11 @@ const EmailVerification = () => {
       );
 
      
-      setMessage("Um email de verificação foi enviado, cheque sua caixa de entrada!");
+      setMessage("Enviamos um e-mail de verificação. Por favor, verifique sua caixa de entrada!");
       console.log("sucesso")
     } catch  {
       setButtonTitle("Reenviar E-mail de Verificação")
-      setMessage("Erro ao enviar email de verificaçao. Por favor, tente novamente!");
+      setMessage("Houve um erro ao enviar o e-mail de verificação. Por favor, tente novamente mais tarde!");
     } finally {
       setIsSending(false);
     }
