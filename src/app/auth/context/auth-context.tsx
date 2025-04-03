@@ -8,19 +8,14 @@ import api from "@/api/api";
 
 interface AuthContextType {
   access_token: string | null;
-  user_id: string | null;
-  name: string | null;
-  user_name:string | null
-  business_name: string | null;
-  email: string | null;
-  openAddInfo: boolean;
+  user_id: string | null; 
   login: (username_or_email: string, password: string) => Promise<boolean>;
   logout: () => void;
   signUp: (name:string, user_name: string, email:string, password:string) => Promise<boolean>;
   authenticateWithGoogle: (user_name:string, token:string, user_id:string, name:string, email:string) => void;
   refreshBeforeRequest: (token:string | undefined) => Promise<void>;
-  updateInfo: (business_name:string, phone:string, address:string, welcome_message:string) => Promise<boolean>
-  setOpenAddInfo: (openAddInfo:boolean) => void
+  updateAddInfo: (business_name:string, phone:string, address:string, welcome_message:string) => Promise<boolean>
+
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -28,29 +23,17 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [access_token, setToken] = useState<string | null>(Cookies.get("token") ?? null);
   const [user_id, setUserId] = useState<string | null>(Cookies.get("user_id") ?? null);
-  const [name, setName] = useState<string | null>(Cookies.get("name") ?? null);
-  const [email, setEmail] = useState<string | null>(Cookies.get("email") ?? null);
-  const [business_name, setBusinessName] = useState<string | null>(Cookies.get("business_name") ?? null);
-  const [user_name, setUserName] = useState<string | null>(Cookies.get("user_name") ?? null);
   const router = useRouter(); // Initialize router
-  const [openAddInfo, setOpenAddInfo] = useState(false)
 
   useEffect(() => {
     const storedToken = Cookies.get("token");
     const storedUserId = Cookies.get("user_id");
-    const storedName = Cookies.get("name");
-    const storedUserName = Cookies.get("user_name");
-
-    const storedBusinessName = Cookies.get("business_name");
     if (storedUserId) setUserId(storedUserId);
     if (storedToken) setToken(storedToken);
-    if (storedName) setName(storedName);
-    if (storedUserName) setName(storedUserName);
-
-    if (storedBusinessName) setBusinessName(storedBusinessName);
+    
   }, []);
 
-  const updateInfo = async (business_name:string, phone:string, address:string, welcome_message:string) =>{
+  const updateAddInfo = async (business_name:string, phone:string, address:string, welcome_message:string) =>{
    
     try {
 
@@ -96,7 +79,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signUp = async(name:string, user_name: string, email:string, password:string): Promise<boolean> =>{
     try {
       await api.post("/users", { name, username: user_name, email, password }, {withCredentials:true});
-      setEmail(email)
       return true;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
@@ -163,11 +145,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     Cookies.remove("user_name");
     Cookies.remove("email")
     Cookies.remove("phone")
-    setName(null);
-    setBusinessName(null);
     setToken(null);
     setUserId(null);
-    setUserName(null)
     router.push("/login");
 
   };
@@ -181,7 +160,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user_name,access_token, user_id, name, business_name, email, login, signUp, logout, authenticateWithGoogle, refreshBeforeRequest, updateInfo, setOpenAddInfo, openAddInfo }}>
+    <AuthContext.Provider value={{ access_token, user_id, login, signUp, logout, authenticateWithGoogle, refreshBeforeRequest, updateAddInfo }}>
       {children}
     </AuthContext.Provider>
   );

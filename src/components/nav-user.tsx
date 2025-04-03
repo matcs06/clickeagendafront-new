@@ -27,7 +27,8 @@ import {
 } from "@/components/ui/sidebar"
 import { useAuth } from "@/app/auth/context/auth-context"
 import { ModeToggle } from "./mode-toogle"
-import {  useRouter } from "next/navigation";
+import CompleteProfileModal from "@/app/admin/pages/addinfo/page"
+import { useState } from "react"
 
 export function NavUser({
   user,
@@ -38,16 +39,15 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
-  const router = useRouter();
 
-  const {logout, setOpenAddInfo} = useAuth()
-
+  const {logout} = useAuth()
+  const [ openAdditionalInfo, setOpenAdditionalInfo] = useState(false)
   const handleAddInfo = () =>{
-    setOpenAddInfo(true)
-    router.push("/admin/pages/addinfo")  
+   setOpenAdditionalInfo(!openAdditionalInfo) 
   }
 
   return (
+    <>
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
@@ -101,5 +101,7 @@ export function NavUser({
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
+    <CompleteProfileModal  open={openAdditionalInfo} setOpen={setOpenAdditionalInfo}/>  
+    </>
   )
 }

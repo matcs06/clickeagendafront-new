@@ -31,7 +31,7 @@ function CalendarApp() {
 
 
   const calendar = useNextCalendarApp({
-   isResponsive:false,
+    isResponsive:false,
     locale:"pt-BR",
     defaultView: currentView,
     views: [createViewDay(), createViewWeek(), createViewMonthGrid(), createViewMonthAgenda()],

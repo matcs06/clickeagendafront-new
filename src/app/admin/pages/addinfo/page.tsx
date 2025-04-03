@@ -19,14 +19,20 @@ interface User{
   address: string;
 }
 
-export default function CompleteProfileModal() {
+interface ComponentProps{
+  open: boolean;
+  setOpen: any 
+}
+
+export default function CompleteProfileModal({open, setOpen}: ComponentProps) {
+
   const [form, setForm] = useState({
     business_name: "",
     phone: "",
     address: "",
     welcome_message: "",
   });
-  const {updateInfo,openAddInfo, setOpenAddInfo, refreshBeforeRequest} = useAuth()
+  const {updateAddInfo, refreshBeforeRequest} = useAuth()
   useEffect(() => {
     // Check if business_name and phone are missing
     const fetchUserinfo = async() =>{
@@ -52,7 +58,7 @@ export default function CompleteProfileModal() {
     fetchUserinfo()
 
     return () => {}
-  }, [openAddInfo]);
+  }, []);
 
   const handleChange = (e:any) => {
     const { name, value } = e.target;
@@ -75,10 +81,7 @@ export default function CompleteProfileModal() {
     // Enviar os dados para a API
     try {
 
-      const success = await updateInfo(form.business_name,form.phone, form.address, form.welcome_message)
-      if(success){
-        setOpenAddInfo(false)
-      }
+      await updateAddInfo(form.business_name,form.phone, form.address, form.welcome_message)
       toast.success("Informações adicionais atualizadas!")
     } catch {
       toast.error("Erro ao atualizar informacoes adicionais")
@@ -88,11 +91,11 @@ export default function CompleteProfileModal() {
   };
 
   const handleClose = () => {
-    setOpenAddInfo(false)
+    setOpen(false)
   };
 
   return (
-    <Dialog open={openAddInfo} onOpenChange={setOpenAddInfo} >
+    <Dialog open={open} onOpenChange={setOpen} >
         <DialogContent className="p-6 max-w-md rounded-lg shadow-lg">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold text-gray-800">Complete seu Perfil</DialogTitle>
