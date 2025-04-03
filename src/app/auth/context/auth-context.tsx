@@ -15,7 +15,7 @@ interface AuthContextType {
   authenticateWithGoogle: (user_name:string, token:string, user_id:string, name:string, email:string) => void;
   refreshBeforeRequest: (token:string | undefined) => Promise<void>;
   updateAddInfo: (business_name:string, phone:string, address:string, welcome_message:string) => Promise<boolean>
-
+  getUserInfo: ()=> {user_id: string | null, name: string | null, email: string | null, business_name: string | null, user_name: string | null, is_verified: string |null}
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -159,8 +159,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     Cookies.set("email", email )
   };
 
+  // Function to fetch user data from cookies
+  const getUserInfo = () => ({
+    user_id: Cookies.get("user_id") ?? null,
+    name: Cookies.get("name") ?? null,
+    email: Cookies.get("email") ?? null,
+    business_name: Cookies.get("business_name") ?? null,
+    user_name: Cookies.get("user_name") ?? null,
+    is_verified: Cookies.get("is_verified") ?? null
+  });
+
   return (
-    <AuthContext.Provider value={{ access_token, user_id, login, signUp, logout, authenticateWithGoogle, refreshBeforeRequest, updateAddInfo }}>
+    <AuthContext.Provider value={{ access_token, user_id, login, signUp, logout, authenticateWithGoogle, refreshBeforeRequest, updateAddInfo, getUserInfo }}>
       {children}
     </AuthContext.Provider>
   );

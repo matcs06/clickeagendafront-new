@@ -5,15 +5,21 @@ import { usePathname } from "next/navigation";
 import { AppSidebar } from "@/components/app-sidebar"
 import { ReactNode } from "react";
 import { useMediaQuery } from "react-responsive";
+import { useAuth } from "../auth/context/auth-context";
+import EmailVerification from "../admin/pages/email-verification/page";
 
 export function SidebarWrapper({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isMobile = useMediaQuery({ maxWidth: 768 });
 
-  
-  // Define routes where the sidebar should be hidden
+  const {getUserInfo} = useAuth()
+  const userInfo = getUserInfo()
   const authRoutes = ["/login", "/signin"];
 
+  const childrenmod = <EmailVerification/>
+  
+  const showEmailVerificationPage = userInfo.is_verified == "false" && !pathname.includes(authRoutes[0]) && !pathname.includes(authRoutes[1]) 
+  // Define routes where the sidebar should be hidden
   return (
     !authRoutes.includes(pathname) ? (
       <SidebarProvider>
@@ -23,8 +29,8 @@ export function SidebarWrapper({ children }: { children: ReactNode }) {
              <SidebarTrigger className="cursor-pointer"/>
           </div>
         )}
-
-        {children}
+        {!showEmailVerificationPage ? 
+          children : childrenmod}
       </SidebarProvider>
     ) : (
       <>{children}</>

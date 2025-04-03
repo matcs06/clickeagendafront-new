@@ -47,10 +47,10 @@ export function NavMain({
                     </a>
 
 
-                  <a href={item.url}>
-        
-                   <span>{item.title}</span>
-                  </a>
+                    <a href={item.url}>
+          
+                      <span>{item.title}</span>
+                    </a>
                 
                 </SidebarMenuButton>
               </CollapsibleTrigger>

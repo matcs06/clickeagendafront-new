@@ -35,7 +35,7 @@ export default function LoginPage() {
       if(Cookies.get("business_name") == null || Cookies.get("phone") == null){
         router.push("/admin/pages/addinfo")
       }else{
-        router.push("/pages/dashboard");
+        router.push("/");
       }
     } else {
       toast.error("Usuário ou senha inválidos.");
