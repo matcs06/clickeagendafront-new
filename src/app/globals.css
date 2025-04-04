@@ -121,19 +121,39 @@
 
 /* Light */
 .sx__time-grid-event {
-  border-bottom: 3px solid rgba(255, 255, 255, 0.4) !important;
+  border-bottom: 2px solid oklch(1 0 0) !important;
   overflow: hidden;
 }
 
 /* Dark */
 html.dark .sx__time-grid-event {
-  border-bottom: 3px solid rgba(0, 0, 0, 0.4) !important;
+  border-bottom: 2px solid oklch(0.145 0 0) !important;
   overflow: hidden;
 }
 
 .sx__time-grid-event:hover {
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
   cursor: pointer;
+}
+
+html.dark .sx__time-grid-event:hover {
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.15);
+  cursor: pointer;
+}
+
+/* Enable container queries on the calendar */
+.sx__calendar {
+  container-type: inline-size;
+}
+
+/* Hide the today button when the calendar is narrower than 700px */
+@container (max-width: 699px) {
+  .sx__today-button {
+    display: none;
+  }
+  .sx__range-heading {
+    font-size: 0.875rem !important; /* or whatever smaller size you want */
+  }
 }
 
 @layer base {

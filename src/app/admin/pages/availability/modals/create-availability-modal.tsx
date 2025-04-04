@@ -59,7 +59,6 @@ export default function CreateAvailabilityModal({ onAvailabilityCreated }: Creat
         validateMorningTime(morningStart, morningEnd);
         validateAfternoonTime(afternoonStart, afternoonEnd)
 
-        const user_id = Cookies.get("user_id");
         let token = Cookies.get("token");
   
         await refreshBeforeRequest(token)
@@ -93,8 +92,8 @@ export default function CreateAvailabilityModal({ onAvailabilityCreated }: Creat
            morning_end_time,
            afternoon_start_time,
            afternoon_end_time,
-           user_id: user_id,
         }, {
+          withCredentials: true,
            headers: {
               Authorization: "Bearer " + token,
            },

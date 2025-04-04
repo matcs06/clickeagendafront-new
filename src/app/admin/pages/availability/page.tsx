@@ -31,22 +31,11 @@ export default function Availabilities() {
 
   const fetchAvailabilities = async (): Promise<Availability[] | undefined> => {
 
-
     try {
 
       const user_id = Cookies.get("user_id");
-      let token = Cookies.get("token");
-      await refreshBeforeRequest(token)
-
-      token = Cookies.get("token");
-
-      if (!token || !user_id) throw new Error("User not authenticated");
-
-      const response = await api.get<Availability[]>(`/availability?user_id=${user_id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-        withCredentials: true,
-      });
-
+     
+      const response = await api.get<Availability[]>(`/availability?user_id=${user_id}`);
 
       return response.data ?? [];
     } catch  {

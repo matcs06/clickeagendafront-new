@@ -68,6 +68,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       Cookies.set("business_name", data.user.business_name); // Store business_name
       Cookies.set("phone", data.user.phone)
       Cookies.set("is_verified", String(data.user.is_verified))
+      Cookies.set("address", data.user.address)
       setToken(data.access_token);
       return true;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -146,6 +147,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     Cookies.remove("email")
     Cookies.remove("phone")
     Cookies.remove("is_verified")
+    Cookies.remove("address")
 
     setToken(null);
     setUserId(null);

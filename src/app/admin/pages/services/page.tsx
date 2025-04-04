@@ -35,18 +35,9 @@ export default function Services() {
   const fetchServices = async (): Promise<Service[] | undefined> => {
   
     try {
-      let token = Cookies.get("token");
       const user_id = Cookies.get("user_id");
-    
-      await refreshBeforeRequest(token)
 
-      token = Cookies.get("token");
-
-
-      const response = await api.get(`/products?user_id=${user_id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-        withCredentials: true,
-      });
+      const response = await api.get(`/products?user_id=${user_id}`);
   
       return response.data ?? []; // ✅ Always return an array
     } catch (error: any) {
