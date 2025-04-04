@@ -1,4 +1,4 @@
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts"
+import { Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ComposedChart } from "recharts"
 
 interface ScheduleType {
    id: string
@@ -28,7 +28,10 @@ function getRevenueByDay(schedules: ScheduleType[] | undefined) {
 
   })
 
-  const data = Object.entries(grouped).map(([date, value]) => ({ date, valor: value }))
+  const data = Object.entries(grouped)
+  .sort(([a], [b]) => new Date(a).getTime() - new Date(b).getTime())
+  .map(([date, value]) => ({ date, valor: value }))
+  
   return { data, total }
 
 }
@@ -39,26 +42,20 @@ export default function RevenueChart({ schedules }: { schedules: ScheduleType[] 
    return (
      <div className="bg-white dark:bg-muted rounded-2xl p-4 shadow-sm">
        <div className="flex items-center justify-between mb-4">
-         <h2 className="text-lg font-semibold">💰 Faturamento Estimado</h2>
+         <h2 className="text-lg font-semibold mt-3">💰 Faturamento Estimado</h2>
          <span className="text-green-600 font-bold text-md">
            Total: R$ {total.toFixed(2)}
          </span>
        </div>
        <ResponsiveContainer width="100%" height={300}>
-         <AreaChart data={data}>
-           <defs>
-             <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-               <stop offset="5%" stopColor="#4ade80" stopOpacity={0.8} />
-               <stop offset="95%" stopColor="#4ade80" stopOpacity={0} />
-             </linearGradient>
-           </defs>
-           <XAxis dataKey="date" />
-           <YAxis />
-           <CartesianGrid strokeDasharray="3 3" />
-           <Tooltip formatter={(valor) => `R$ ${valor}`} />
-           <Area type="monotone" dataKey="valor" stroke="#22c55e" fillOpacity={1} fill="url(#colorValue)" />
-         </AreaChart>
-       </ResponsiveContainer>
+        <ComposedChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="date" tickFormatter={(str) => str.slice(0, 5)} />
+          <YAxis />
+          <Tooltip formatter={(valor) => `R$ ${valor}`} />
+          <Area  type="monotone" dataKey="valor" stroke="#6366F1" fill="#6366F1" fillOpacity={0.3} />
+        </ComposedChart>
+      </ResponsiveContainer>
      </div>
    )
  }

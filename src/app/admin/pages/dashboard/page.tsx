@@ -204,7 +204,7 @@ export default function Dashboard() {
           <CardContent className="flex items-center gap-4 p-4">
             <Activity className="text-primary w-6 h-6" />
             <div>
-              <p className="text-sm text-muted-foreground">Média por dia</p>
+              <p className="text-sm text-muted-foreground">Média de agendamentos por dia</p>
               <p className="text-lg font-semibold">{schedulesStats.avgPerDay}</p>
             </div>
           </CardContent>
@@ -223,8 +223,8 @@ export default function Dashboard() {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
-          <CardContent className="p-4">
-            <h2 className="text-lg font-medium mb-2">Agendamentos por dia</h2>
+          <CardContent >
+            <h2 className="text-lg font-medium mb-4">Agendamentos por dia</h2>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart  data={appointmentsPerDayData}>
                 <XAxis dataKey="day" />
