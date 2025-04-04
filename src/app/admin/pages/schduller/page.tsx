@@ -2,6 +2,7 @@
  
 import { ScheduleXCalendar, useNextCalendarApp } from '@schedule-x/react'
 import {
+  CalendarEventExternal,
   createViewDay,
   createViewMonthAgenda,
   createViewMonthGrid,
@@ -36,9 +37,13 @@ interface Schedules {
     user_id:string
 }
 
+interface ExtendedCalendarEvent extends CalendarEventExternal {
+  schedule_id: string
+  
+}
+
 function CalendarApp() {
   const eventsService = useState(() => createEventsServicePlugin())[0]
-
   const eventModal = createEventModalPlugin()
   const {refreshBeforeRequest} = useAuth()
 
@@ -92,6 +97,7 @@ function CalendarApp() {
       onSelectedDateUpdate(date) {
         setCalendarViewMonthYear(date.split("-").reverse().join("/").substring(3))
       },
+
       onEventClick: (event) => {
         waitForModal(() => {
           const modal = document.querySelector('.sx__event-modal.is-open')
@@ -104,13 +110,13 @@ function CalendarApp() {
           const phoneNumber = event.whatsappNumber || event.extendedProps?.whatsappNumber
           if (!phoneNumber) return
           const confirmationText = `${Cookies.get("business_name")}\nOlá, ${event.people}! Vamos confirmar seu agendamento? \n\n` +  
-          `Serviço: ${event.title}\n` +
+          `Serviço: ${event.title?.split("-")[0]}\n` +
           `Data: ${event.date}\n` +
           `Horário: ${event.start_time.substring(0,5)}\n` +
           `Valor: R$ ${event.price}\n` +
           `Local: ${event.location ? event.location : "Sede empresa"} \n\n` +
           `Confirma?`
-
+          
           const wpp_link = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(confirmationText)}`
 
 
@@ -169,7 +175,7 @@ function CalendarApp() {
             cursor: pointer;
             font-size: 12px;
           `
-
+          
           deleteButton.addEventListener('click', async () => {
             const confirmDelete = confirm('Tem certeza que deseja excluir este agendamento?')
             
@@ -178,7 +184,10 @@ function CalendarApp() {
                 let token = Cookies.get("token");
                 refreshBeforeRequest(token)
                 token = Cookies.get("token");
-                await api.delete(`/schedules/${event.id}`, {
+
+                const extendedEvent = event as ExtendedCalendarEvent
+
+                await api.delete(`/schedules/${extendedEvent.schedule_id}`, {
                   headers: {
                     Authorization: `Bearer ${Cookies.get("token")}`,
                   },
@@ -243,6 +252,7 @@ function CalendarApp() {
           date: schedule.date,
           start_time: schedule.start_time,
           price: schedule.value,
+          schedule_id: schedule.id,
         }
     
         return sc 
