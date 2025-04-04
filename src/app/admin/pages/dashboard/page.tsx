@@ -25,20 +25,32 @@ interface Schedules {
    user_id:string
 }
 
-const servicesData = [
-  { name: 'Massagem', value: 38 },
-  { name: 'Limpeza de Pele', value: 20 },
-  { name: 'Depilação', value: 24 },
-]
+
+const months = [
+   { value: "01", label: "Janeiro" },
+   { value: "02", label: "Fevereiro" },
+   { value: "03", label: "Março" },
+   { value: "04", label: "Abril" },
+   { value: "05", label: "Maio" },
+   { value: "06", label: "Junho" },
+   { value: "07", label: "Julho" },
+   { value: "08", label: "Agosto" },
+   { value: "09", label: "Setembro" },
+   { value: "10", label: "Outubro" },
+   { value: "11", label: "Novembro" },
+   { value: "12", label: "Dezembro" },
+ ]
+ 
+ const years = ["2024", "2025", "2026"] // você pode gerar isso dinamicamente depois
+ 
 
 const COLORS = ["#8884d8", "#82ca9d", "#ffc658"]
 
 export default function Dashboard() {
-   const [scheduleFilter, setScheduleFilter] = useState<"monthly" | "all">("monthly")
+   const [scheduleFilter, setScheduleFilter] = useState<"monthly" | "anual" | "all">("monthly")
+   const [month, setMonth] = useState("01")
+   const [year, setYear] = useState("2024")
    const {refreshBeforeRequest} = useAuth()
-
-
-   
 
    const fetchSchedules = async (): Promise<Schedules[]> => {
 
@@ -60,13 +72,26 @@ export default function Dashboard() {
    queryFn: fetchSchedules, // ✅ Ensures async handling
    });  
 
+   const filteredSchedules = schedules?.filter((schedule) => {
+      const scheduleDate = schedule.date
+      const scheduleYear = scheduleDate.split("/")[2]
+      const scheduleMonth = scheduleDate.split("/")[1]
+      if(scheduleFilter === "monthly"){
+         return `${scheduleMonth}/${scheduleYear}` == `${month}/${year}`
+      }else if(scheduleFilter === "anual"){
+         return scheduleYear == year
+      }else{
+         return schedule
+      }
+   })
+
    const schedulesStats = {
-      totalAppointments: schedules?.length,
-      avgPerDay: (schedules ? schedules.length / 30 : 0).toPrecision(2),
-      hoursWorked: schedules?.reduce((acc, schedule) => acc + parseInt(schedule.service_duration), 0),
+      totalAppointments: filteredSchedules?.length,
+      avgPerDay: (filteredSchedules ? filteredSchedules.length / 30 : 0).toPrecision(2),
+      hoursWorked: filteredSchedules?.reduce((acc, schedule) => acc + parseInt(schedule.service_duration), 0),
    }
 
-   const serviceDistribution = schedules?.reduce((acc, schedule) => {
+   const serviceDistribution = filteredSchedules?.reduce((acc, schedule) => {
       const service = schedule.service;
       const existingService = acc.find((s) => s.service === service);
       if (existingService) {
@@ -77,7 +102,7 @@ export default function Dashboard() {
       return acc;
    }, [] as { service: string; value: number }[]);
 
-   const appointmentsPerDayData = schedules?.reduce((acc, schedule) => {
+   const appointmentsPerDayData = filteredSchedules?.reduce((acc, schedule) => {
       
       const date = parse(schedule.date, "dd/MM/yyyy", new Date());
       
@@ -98,15 +123,71 @@ export default function Dashboard() {
          <label htmlFor="filter" className="text-sm text-muted-foreground">
             Visualizar:
          </label>
-         <select
-            id="filter"
+      <select
+        id="filter-type"
+        className="border border-input rounded-md px-3 py-2 text-sm focus:outline-none mr-6 "
+        value={scheduleFilter}
+        onChange={(e) => setScheduleFilter(e.target.value as "monthly" | "anual" | "all")}
+      >
+        <option value="monthly">Agendamentos Mensais</option>
+        <option value="anual">Agendamentos Anuais</option>
+        <option value="all">Todos os Agendamentos</option>
+      </select>
+
+      {scheduleFilter === "monthly" && (
+        <>
+          <label htmlFor="month" className="text-sm text-muted-foreground">
+            Mês:
+          </label>
+          <select
+            id="month"
             className="border border-input rounded-md px-3 py-2 text-sm focus:outline-none"
-            value={scheduleFilter}
-            onChange={(e) => setScheduleFilter(e.target.value as "monthly" | "all")}
-         >
-            <option value="monthly">Agendamentos Mensais</option>
-            <option value="all">Todos os Agendamentos</option>
-         </select>
+            value={month}
+            onChange={(e) => setMonth(e.target.value)}
+          >
+            {months.map((m) => (
+              <option key={m.value} value={m.value}>
+                {m.label}
+              </option>
+            ))}
+          </select>
+          <label htmlFor="year" className="text-sm text-muted-foreground">
+            Ano:
+          </label>
+          <select
+            id="year"
+            className="border border-input rounded-md px-3 py-2 text-sm focus:outline-none"
+            value={year}
+            onChange={(e) => setYear(e.target.value)}
+          >
+            {years.map((y) => (
+              <option key={y} value={y}>
+                {y}
+              </option>
+            ))}
+          </select>
+        </>
+      )}
+
+      {scheduleFilter === "anual" && (
+        <>
+          <label htmlFor="year" className="text-sm text-muted-foreground">
+            Ano:
+          </label>
+          <select
+            id="year"
+            className="border border-input rounded-md px-3 py-2 text-sm focus:outline-none"
+            value={year}
+            onChange={(e) => setYear(e.target.value)}
+          >
+            {years.map((y) => (
+              <option key={y} value={y}>
+                {y}
+              </option>
+            ))}
+          </select>
+        </>
+      )}
       </div>
       {/* KPIs */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -154,10 +235,10 @@ export default function Dashboard() {
             </ResponsiveContainer>
           </CardContent>
         </Card>
-        <RevenueChart schedules={schedules} />
+        <RevenueChart schedules={filteredSchedules} />
 
-        <Card>
-          <CardContent className="p-4">
+        <Card className="min-w-lvh">
+          <CardContent className="p-4 min-w-auto w-full">
             <h2 className="text-lg font-medium mb-2">Distribuição de serviços</h2>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>

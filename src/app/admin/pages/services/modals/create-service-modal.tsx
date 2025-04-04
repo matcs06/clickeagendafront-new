@@ -5,10 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import axios from "axios";
 import { toast } from "sonner"; // Import the toast library
 import Cookies from "js-cookie";
 import { useAuth } from "@/app/auth/context/auth-context";
+import api from "@/api/api";
 
 
 interface CreateServiceModalProps {
@@ -47,8 +47,7 @@ export default function CreateServiceModal({ onServiceCreated }: CreateServiceMo
 
       token = Cookies.get("token");
 
-      await axios.post(
-        `http://localhost:3333/products`,
+      await api.post(`/products`,
         { name: name + "-" + user_id, description, price, duration, user_id },
         { headers: { Authorization: `Bearer ${token}` } }
       );
