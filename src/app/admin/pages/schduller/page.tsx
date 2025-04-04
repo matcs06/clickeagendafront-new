@@ -70,8 +70,6 @@ function CalendarApp() {
     requestAnimationFrame(check)
   }
 
-  
-  
 
   const calendar = useNextCalendarApp({
     
@@ -95,7 +93,6 @@ function CalendarApp() {
         setCalendarViewMonthYear(date.split("-").reverse().join("/").substring(3))
       },
       onEventClick: (event) => {
-        console.log(event)
         waitForModal(() => {
           const modal = document.querySelector('.sx__event-modal.is-open')
     
@@ -154,7 +151,7 @@ function CalendarApp() {
             text-align: center;
             text-decoration: none;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 12px;
             cursor: pointer;
           `
 
@@ -170,12 +167,12 @@ function CalendarApp() {
             text-align: center;
             font-weight: bold;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 12px;
           `
 
           deleteButton.addEventListener('click', async () => {
             const confirmDelete = confirm('Tem certeza que deseja excluir este agendamento?')
-          
+            
             if (confirmDelete) {
               try {
                 let token = Cookies.get("token");

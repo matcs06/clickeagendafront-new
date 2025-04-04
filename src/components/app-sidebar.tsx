@@ -52,7 +52,7 @@ const data = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/pages/dashboard",
+      url: "/admin/pages/dashboard",
       icon: LayoutDashboard,
       isActive: true,
     },
