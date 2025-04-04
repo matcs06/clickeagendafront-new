@@ -109,15 +109,15 @@ export default function Dashboard() {
       const day = date.toLocaleString('pt-BR', { weekday: 'short' });
       const existingDay = acc.find((d) => d.day === day);
       if (existingDay) {
-         existingDay.count += 1;
+         existingDay.quantidade += 1;
       } else {
-         acc.push({ day, count: 1 });
+         acc.push({ day, quantidade: 1 });
       }
       return acc;
-   }, [] as { day: string; count: number }[]);
+   }, [] as { day: string; quantidade: number }[]);
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 w-full">
       <h1 className="text-2xl font-semibold">Dashboard</h1>
       <div className="flex items-center gap-2">
          <label htmlFor="filter" className="text-sm text-muted-foreground">
@@ -226,11 +226,11 @@ export default function Dashboard() {
           <CardContent className="p-4">
             <h2 className="text-lg font-medium mb-2">Agendamentos por dia</h2>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={appointmentsPerDayData}>
+              <BarChart  data={appointmentsPerDayData}>
                 <XAxis dataKey="day" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="count" fill="#6366f1" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="quantidade" label={"teste"} fill="#6366f1" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -248,7 +248,7 @@ export default function Dashboard() {
                   nameKey="service"
                   cx="50%"
                   cy="50%"
-                  fontSize={10}
+                  fontSize={12}
                   outerRadius={100}
                   label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
                 >

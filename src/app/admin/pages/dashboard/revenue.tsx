@@ -28,7 +28,7 @@ function getRevenueByDay(schedules: ScheduleType[] | undefined) {
 
   })
 
-  const data = Object.entries(grouped).map(([date, value]) => ({ date, value }))
+  const data = Object.entries(grouped).map(([date, value]) => ({ date, valor: value }))
   return { data, total }
 
 }
@@ -55,8 +55,8 @@ export default function RevenueChart({ schedules }: { schedules: ScheduleType[] 
            <XAxis dataKey="date" />
            <YAxis />
            <CartesianGrid strokeDasharray="3 3" />
-           <Tooltip formatter={(value) => `R$ ${value}`} />
-           <Area type="monotone" dataKey="value" stroke="#22c55e" fillOpacity={1} fill="url(#colorValue)" />
+           <Tooltip formatter={(valor) => `R$ ${valor}`} />
+           <Area type="monotone" dataKey="valor" stroke="#22c55e" fillOpacity={1} fill="url(#colorValue)" />
          </AreaChart>
        </ResponsiveContainer>
      </div>
