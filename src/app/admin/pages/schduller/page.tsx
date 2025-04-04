@@ -16,10 +16,11 @@ import '@schedule-x/theme-default/dist/index.css'
 import { useEffect, useState } from "react";
 import { useTheme } from 'next-themes'
 import api from '@/api/api'
-import {  useQuery } from "@tanstack/react-query";
+import {  useQuery, useQueryClient } from "@tanstack/react-query";
 //import {  useQueryClient } from "@tanstack/react-query";
 import { sumTime } from '@/lib/utils'
 import { useAuth } from '@/app/auth/context/auth-context'
+import { toast } from 'sonner'
 interface Schedules {
     id: string
 		customer_name: string,
@@ -50,7 +51,7 @@ function CalendarApp() {
   }
   
   const [callendarViewMonthYear, setCalendarViewMonthYear] = useState<string | null>(getFormattedMonthYear())
-  //const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   const waitForModal = (callback: () => void) => {
     const check = () => {
@@ -68,6 +69,8 @@ function CalendarApp() {
   
     requestAnimationFrame(check)
   }
+
+  
   
 
   const calendar = useNextCalendarApp({
@@ -113,24 +116,7 @@ function CalendarApp() {
 
           const wpp_link = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(confirmationText)}`
 
-          const whatsappButton = document.createElement('a')
-          whatsappButton.href = wpp_link
-          whatsappButton.target = '_blank'
-          whatsappButton.className = 'whatsapp-button'
-          whatsappButton.textContent = 'Confirmar via WhatsApp'
-          whatsappButton.style.cssText = `
-            display: inline-block;
-            margin-top: 12px;
-            padding: 8px 16px;
-            background-color: #25D366;
-            color: white;
-            border-radius: 4px;
-            text-align: center;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 14px;
-          `
-    
+
           const valorDiv = document.createElement('div')
           valorDiv.className = 'sx__has-icon sx__event-modal__description'
           valorDiv.innerHTML = `
@@ -145,9 +131,78 @@ function CalendarApp() {
           R$ ${event.price || '---'}
           `
 
+          const buttonContainer = document.createElement('div')
+          buttonContainer.style.cssText = `
+            display: flex;
+            gap: 12px;
+            justify-content: space-between;
+            align-items: space-between;
+
+            margin-top: 12px;
+            flex-wrap: wrap;
+          `
+          const whatsappButton = document.createElement('a')
+          whatsappButton.href = wpp_link
+          whatsappButton.target = '_blank'
+          whatsappButton.className = 'whatsapp-button'
+          whatsappButton.textContent = 'Confirmar via WhatsApp'
+          whatsappButton.style.cssText = `
+            padding: 8px 16px;
+            background-color: #25D366;
+            color: white;
+            border-radius: 4px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+          `
+
+          const deleteButton = document.createElement('button')
+          deleteButton.textContent = 'Excluir'
+          deleteButton.className = 'delete-button'
+          deleteButton.style.cssText =`
+            padding: 8px 16px;
+            background-color: #e53935;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+          `
+
+          deleteButton.addEventListener('click', async () => {
+            const confirmDelete = confirm('Tem certeza que deseja excluir este agendamento?')
+          
+            if (confirmDelete) {
+              try {
+                let token = Cookies.get("token");
+                refreshBeforeRequest(token)
+                token = Cookies.get("token");
+                await api.delete(`/schedules/${event.id}`, {
+                  headers: {
+                    Authorization: `Bearer ${Cookies.get("token")}`,
+                  },
+                  withCredentials: true,
+                })
+                toast.success("Agendamento excluído com sucesso!", {
+                  duration: 3000,
+                })
+                queryClient.invalidateQueries({ queryKey: ["schedules"] })
+              } catch  {
+                toast.error("Erro ao excluir agendamento.")
+              } // assuming your event has an `id` field
+            }
+          })
+
+          // Adiciona os botões no container
+          buttonContainer.appendChild(whatsappButton)
+          buttonContainer.appendChild(deleteButton)
           // Append the button somewhere inside the modal
           modal.appendChild(valorDiv)
-          modal.appendChild(whatsappButton)
+          modal.appendChild(buttonContainer)
         }) // Wait for DOM to render moda
       }
     }
