@@ -48,8 +48,8 @@ const COLORS = ["#8884d8", "#82ca9d", "#ffc658"]
 
 export default function Dashboard() {
    const [scheduleFilter, setScheduleFilter] = useState<"monthly" | "anual" | "all">("monthly")
-   const [month, setMonth] = useState("01")
-   const [year, setYear] = useState("2024")
+   const [month, setMonth] = useState(new Date().getMonth() + 1 < 10 ? `0${new Date().getMonth() + 1}` : `${new Date().getMonth() + 1}`)
+   const [year, setYear] = useState(new Date().getFullYear().toString())
    const {refreshBeforeRequest} = useAuth()
 
    const fetchSchedules = async (): Promise<Schedules[]> => {
@@ -237,7 +237,7 @@ export default function Dashboard() {
         </Card>
         <RevenueChart schedules={filteredSchedules} />
 
-        <Card className="min-w-lvh">
+        <Card>
           <CardContent className="p-4 min-w-auto w-full">
             <h2 className="text-lg font-medium mb-2">Distribuição de serviços</h2>
             <ResponsiveContainer width="100%" height={300}>
@@ -248,6 +248,7 @@ export default function Dashboard() {
                   nameKey="service"
                   cx="50%"
                   cy="50%"
+                  fontSize={10}
                   outerRadius={100}
                   label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
                 >
