@@ -76,3 +76,19 @@ export const timeFormated = (timeValue: any) => {
 
 
 }
+
+export const sumTime = (time1:string, time2:string) => {
+   const toMinutes = (time:any) => {
+      const [hh, mm] = time.split(':').map(Number);
+      return hh * 60 + mm;
+  };
+
+  const toHHMM = (minutes:any) => {
+      const hh = Math.floor(minutes / 60);
+      const mm = minutes % 60;
+      return [hh, mm].map(num => String(num).padStart(2, '0')).join(':');
+  };
+
+  const totalMinutes = toMinutes(time1) + toMinutes(time2);
+  return toHHMM(totalMinutes);
+}

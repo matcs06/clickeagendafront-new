@@ -119,6 +119,23 @@
   max-height: 100vh;
 }
 
+/* Light */
+.sx__time-grid-event {
+  border-bottom: 3px solid rgba(255, 255, 255, 0.4) !important;
+  overflow: hidden;
+}
+
+/* Dark */
+html.dark .sx__time-grid-event {
+  border-bottom: 3px solid rgba(0, 0, 0, 0.4) !important;
+  overflow: hidden;
+}
+
+.sx__time-grid-event:hover {
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
