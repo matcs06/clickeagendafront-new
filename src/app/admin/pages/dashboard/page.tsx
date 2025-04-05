@@ -7,7 +7,7 @@ import Cookies from "js-cookie"
 import { useAuth } from "@/app/auth/context/auth-context"
 import api from "@/api/api"
 import RevenueChart from "./revenue"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { parse } from "date-fns";
 
 interface Schedules {
@@ -51,6 +51,16 @@ export default function Dashboard() {
    const [month, setMonth] = useState(new Date().getMonth() + 1 < 10 ? `0${new Date().getMonth() + 1}` : `${new Date().getMonth() + 1}`)
    const [year, setYear] = useState(new Date().getFullYear().toString())
    const {refreshBeforeRequest} = useAuth()
+   const [scrolled, setScrolled] = useState(false)
+
+   useEffect(() => {
+      const handleScroll = () => {
+        setScrolled(window.scrollY > 10)
+      }
+    
+      window.addEventListener("scroll", handleScroll)
+      return () => window.removeEventListener("scroll", handleScroll)
+    }, [])
 
    const fetchSchedules = async (): Promise<Schedules[]> => {
 
@@ -119,75 +129,75 @@ export default function Dashboard() {
   return (
     <div className="p-6 space-y-6 w-full">
       <h1 className="text-2xl font-semibold">Dashboard</h1>
-      <div className="flex items-center gap-2">
+      <div className={`flex items-center gap-2 sticky top-0 z-40 bg-background py-2 px-4 transition-shadow duration-300 ${scrolled ? "shadow-md" : ""}`}>
          <label htmlFor="filter" className="text-sm text-muted-foreground">
             Visualizar:
          </label>
-      <select
-        id="filter-type"
-        className="border border-input rounded-md px-3 py-2 text-sm focus:outline-none mr-6 "
-        value={scheduleFilter}
-        onChange={(e) => setScheduleFilter(e.target.value as "monthly" | "anual" | "all")}
-      >
-        <option value="monthly">Agendamentos Mensais</option>
-        <option value="anual">Agendamentos Anuais</option>
-        <option value="all">Todos os Agendamentos</option>
-      </select>
+         <select
+         id="filter-type"
+         className="border border-input rounded-md px-3 py-2 text-sm focus:outline-none mr-6 "
+         value={scheduleFilter}
+         onChange={(e) => setScheduleFilter(e.target.value as "monthly" | "anual" | "all")}
+         >
+         <option value="monthly">Agendamentos Mensais</option>
+         <option value="anual">Agendamentos Anuais</option>
+         <option value="all">Todos os Agendamentos</option>
+         </select>
 
-      {scheduleFilter === "monthly" && (
-        <>
-          <label htmlFor="month" className="text-sm text-muted-foreground">
-            Mês:
-          </label>
-          <select
-            id="month"
-            className="border border-input rounded-md px-3 py-2 text-sm focus:outline-none"
-            value={month}
-            onChange={(e) => setMonth(e.target.value)}
-          >
-            {months.map((m) => (
-              <option key={m.value} value={m.value}>
-                {m.label}
-              </option>
-            ))}
-          </select>
-          <label htmlFor="year" className="text-sm text-muted-foreground">
-            Ano:
-          </label>
-          <select
-            id="year"
-            className="border border-input rounded-md px-3 py-2 text-sm focus:outline-none"
-            value={year}
-            onChange={(e) => setYear(e.target.value)}
-          >
-            {years.map((y) => (
-              <option key={y} value={y}>
-                {y}
-              </option>
-            ))}
-          </select>
-        </>
-      )}
+         {scheduleFilter === "monthly" && (
+         <>
+            <label htmlFor="month" className="text-sm text-muted-foreground">
+               Mês:
+            </label>
+            <select
+               id="month"
+               className="border border-input rounded-md px-3 py-2 text-sm focus:outline-none"
+               value={month}
+               onChange={(e) => setMonth(e.target.value)}
+            >
+               {months.map((m) => (
+               <option key={m.value} value={m.value}>
+                  {m.label}
+               </option>
+               ))}
+            </select>
+            <label htmlFor="year" className="text-sm text-muted-foreground">
+               Ano:
+            </label>
+            <select
+               id="year"
+               className="border border-input rounded-md px-3 py-2 text-sm focus:outline-none"
+               value={year}
+               onChange={(e) => setYear(e.target.value)}
+            >
+               {years.map((y) => (
+               <option key={y} value={y}>
+                  {y}
+               </option>
+               ))}
+            </select>
+         </>
+         )}
 
-      {scheduleFilter === "anual" && (
-        <>
-          <label htmlFor="year" className="text-sm text-muted-foreground">
-            Ano:
-          </label>
-          <select
-            id="year"
-            className="border border-input rounded-md px-3 py-2 text-sm focus:outline-none"
-            value={year}
-            onChange={(e) => setYear(e.target.value)}
-          >
-            {years.map((y) => (
-              <option key={y} value={y}>
-                {y}
-              </option>
-            ))}
-          </select>
-        </>
-      )}
+         {scheduleFilter === "anual" && (
+         <>
+            <label htmlFor="year" className="text-sm text-muted-foreground">
+               Ano:
+            </label>
+            <select
+               id="year"
+               className="border border-input rounded-md px-3 py-2 text-sm focus:outline-none"
+               value={year}
+               onChange={(e) => setYear(e.target.value)}
+            >
+               {years.map((y) => (
+               <option key={y} value={y}>
+                  {y}
+               </option>
+               ))}
+            </select>
+         </>
+         )}
       </div>
       {/* KPIs */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -238,8 +248,8 @@ export default function Dashboard() {
         <RevenueChart schedules={filteredSchedules} />
 
         <Card>
-          <CardContent className="p-4 min-w-auto w-full">
-            <h2 className="text-lg font-medium mb-2">Distribuição de serviços</h2>
+          <CardContent className="min-w-auto w-full">
+            <h2 className="text-lg font-medium mb-4">Distribuição de serviços</h2>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie

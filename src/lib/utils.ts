@@ -92,3 +92,8 @@ export const sumTime = (time1:string, time2:string) => {
   const totalMinutes = toMinutes(time1) + toMinutes(time2);
   return toHHMM(totalMinutes);
 }
+
+export const BRLReais = new Intl.NumberFormat("pt-br", {
+   style: "currency",
+   currency: "BRL"
+})

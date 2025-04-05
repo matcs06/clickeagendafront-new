@@ -98,7 +98,9 @@ export default function CreateAvailabilityModal({ onAvailabilityCreated }: Creat
               Authorization: "Bearer " + token,
            },
         });
-        toast.success(`Horário na data ${formatedDate} criado com sucesso`);
+        toast.success(`Horário na data ${formatedDate} criado com sucesso`, {
+          duration: 1000,
+        });
         onAvailabilityCreated();
         setLoading(false)
      } catch(error:any) {

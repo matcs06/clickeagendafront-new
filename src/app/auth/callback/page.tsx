@@ -40,7 +40,7 @@ export default function GoogleCallback() {
           authenticateWithGoogle(user.username, access_token, user.user_id, user.name, user.email, user.is_verified);
 
           // Redirect to the dashboard
-          router.push("/pages/services");
+          router.push("/admin/pages/services");
         } else {
           toast.error("Authentication failed");
         }

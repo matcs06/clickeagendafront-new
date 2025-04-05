@@ -35,9 +35,8 @@ export default function Services() {
   const fetchServices = async (): Promise<Service[] | undefined> => {
   
     try {
-      const user_id = Cookies.get("user_id");
-
-      const response = await api.get(`/products?user_id=${user_id}`);
+      const username = Cookies.get("user_name");
+      const response = await api.get(`/products?username=${username}`);
   
       return response.data ?? []; // ✅ Always return an array
     } catch (error: any) {
