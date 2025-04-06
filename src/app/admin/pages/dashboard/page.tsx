@@ -260,7 +260,7 @@ export default function Dashboard() {
                   cy="50%"
                   fontSize={12}
                   outerRadius={100}
-                  label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
+                  label={({ name, percent }) => `${name.split("-")[0]} (${(percent * 100).toFixed(0)}%)`}
                 >
                   {serviceDistribution?.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

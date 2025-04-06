@@ -1,6 +1,6 @@
 'use client'
 
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -11,16 +11,19 @@ import { BRLReais } from '@/lib/utils' // ajuste se necessário
 import { toast } from 'sonner'
 import { useService } from '@/app/auth/context/service-context'
 
+//import InputMask from 'react-input-mask'
+
+
 export default function CustomerInfo() {
+
+
   const router = useRouter()
-  const searchParams = useSearchParams()
   const {selectedService} = useService()
 
-  const [customerName, setCustomerName] = useState('')
-  const [customerPhone, setCustomerPhone] = useState('')
-
+  const [customerName, setCustomerName] = useState("")
+  const [customerPhone, setCustomerPhone] = useState("")
   useEffect(() => {
-   console.log(selectedService)
+    
     const localData = localStorage.getItem('customer_info_clickagenda')
     if (localData) {
       try {
@@ -33,7 +36,7 @@ export default function CustomerInfo() {
   }, [])
 
   const handleSchedule = async () => {
-    const serviceDuration = selectedService?.description|| ''
+    const serviceDuration = selectedService?.duration|| ''
     const choosedDate = selectedService?.choosed_date || ''
     const choosedTime = selectedService?.choosed_time || ''
     const serviceName = selectedService?.name || ''
@@ -61,11 +64,12 @@ export default function CustomerInfo() {
       })
 
       localStorage.setItem('customer_info_clickeagenda', JSON.stringify({ customerName, customerPhone }))
-      router.push(`/client/finalScreen?valor=${servicePrice}&serviceName=${serviceName}&serviceTime=${choosedTime}&customerName=${customerName}`)
+      toast.success("agendamento conlcuido com sucesso")
     } catch {
       toast.error('Erro ao criar agendamento. Tente novamente.')
     }
   }
+
 
   return (
     <div className="max-w-md mx-auto p-4">
@@ -80,13 +84,16 @@ export default function CustomerInfo() {
           </div>
           <div>
             <Label htmlFor="phone">Número de telefone (WhatsApp)</Label>
+            
             <Input id="phone" value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} autoComplete="off" />
           </div>
           <div className="pt-4 border-t">
-            <p className="text-sm text-muted-foreground">Valor: <strong>{BRLReais.format(Number(searchParams.get('servicePrice') || 0))}</strong></p>
+            <p className="text-sm text-muted-foreground">Valor: <strong>{BRLReais.format(Number(selectedService?.price || 0))}</strong></p>
             <p className="text-xs text-muted-foreground">Pagamento é feito no momento do serviço</p>
           </div>
           <Button onClick={handleSchedule} className="w-full">Agendar</Button>
+          <Button onClick={() => router.back()} variant="outline" className="w-full">Voltar</Button>
+
         </CardContent>
       </Card>
     </div>

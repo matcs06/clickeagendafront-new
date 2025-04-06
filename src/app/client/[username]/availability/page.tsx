@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
@@ -29,17 +29,27 @@ export default function ChooseTime() {
   const username = params.username as string || ""
   const {selectedService, setSelectedService} = useService()
   
-  const serviceName = selectedService?.name.split('-')[0]
+  const stored = localStorage.getItem('ca_selected_service')
+  let parsed;  
+  if (stored) {
+      parsed = JSON.parse(stored)
+  } 
+
+  const serviceName = selectedService?.name.split('-')[0] || parsed.name.split('-')[0]
   const serviceDuration = selectedService?.duration
 
   const [timesAvailable, setTimesAvailable] = useState<AvailabilityDetails>()
   const [choosedDate, setChoosedDate] = useState('')
   const [choosedTime, setChoosedTime] = useState('')
 
+  let duration = "00:00"
+  
   
   const fetchAvailabilities = async()  =>  {
 
-   const user_id = localStorage.getItem("ca_admin_user_id")
+    console.log(selectedService)
+   
+    const user_id = localStorage.getItem("ca_admin_user_id")
 
 
     const response = await api.get<AvailabilityFields[]>(`/availability/?user_id=${user_id}`)
@@ -56,11 +66,25 @@ export default function ChooseTime() {
 
 
   const onClickDay = async (id: string, date: string) => {
+    if(!serviceDuration){
+      const stored = localStorage.getItem('ca_selected_service')
+
+      if (stored) {
+        try {
+           const parsed = JSON.parse(stored)
+           duration = parsed?.duration
+           console.log('Duration:', duration)
+        } catch (err) {
+           console.error('Erro ao fazer parse do localStorage:', err)
+        }
+      }
+    }
+    const fixedDuration = serviceDuration ? serviceDuration : duration
     setChoosedDate(date)
     const user_id = localStorage.getItem("ca_admin_user_id")
     try {
       const response = await api.get<AvailabilityDetails>(`/availability/details/${id}`, {
-        params: { service_duration: serviceDuration + ':00', user_id: user_id },
+        params: { service_duration: fixedDuration + ':00', user_id: user_id },
       })
       setTimesAvailable(response.data)
     } catch  {
@@ -78,7 +102,7 @@ export default function ChooseTime() {
       setSelectedService({ description: selectedService.description, name: selectedService.name, 
                            id: selectedService.id, price: selectedService.price, duration: selectedService.duration, choosed_date: choosedDate, choosed_time: choosedTime });
    }
-   router.push(`client/${username}/customer-info`)
+   router.push(`/client/${username}/customer-info`)
   }
 
   return (
@@ -86,18 +110,21 @@ export default function ChooseTime() {
       <div className="max-w-xl mx-auto space-y-6">
          <Card className="bg-background/60 backdrop-blur border shadow-sm">
             <CardHeader className="text-center">
-               <h1 className="text-2xl font-semibold text-primary">{serviceName}</h1>
+               <h1 className="text-2xl font-bold text-primary">Agendamento</h1>
+               {serviceName && (
+                  <p className="text-sm text-muted-foreground italic">
+                     Serviço: <span className="font-medium text-foreground">{serviceName}</span>
+                  </p>
+               )}
                {!choosedDate ? (
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-muted-foreground mt-1">
                      Escolha um dia 
                   </p>
-               ): (
-                  <p className="text-sm text-muted-foreground">
-                  {getWeekDayName(choosedDate)}, {choosedDate}
+               ) : (
+                  <p className="text-sm text-muted-foreground mt-1">
+                     {getWeekDayName(choosedDate)}, {choosedDate}
                   </p>
-               )
-               }
-               
+               )}
             </CardHeader>
             <CardContent>
                {/* Scroll horizontal nos dias */}
@@ -176,10 +203,12 @@ export default function ChooseTime() {
           </Card>
         )}
 
-        <div className="pt-4 text-center">
+        <div className="pt-4 text-center flex flex-col justify-between">
           <Button className='cursor-pointer' disabled={!choosedDate || !choosedTime} onClick={handleContinue}>
             Continuar
           </Button>
+          <Button onClick={() => router.back()} variant="outline" className='cursor-pointer mt-2'>Voltar</Button>
+
         </div>
       </div>
     </div>

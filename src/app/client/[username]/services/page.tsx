@@ -34,8 +34,10 @@ export default function ServicesPage() {
     queryFn: fetchServices,
   })
 
-  const handleScheduleClick = (service: IService) => {
+  const handleServiceClick = (service: IService) => {
     setSelectedService(service)
+    localStorage.setItem('ca_selected_service', JSON.stringify(service))
+
     router.push(`/client/${username}/availability/`)
   }
 
@@ -71,7 +73,7 @@ export default function ServicesPage() {
       {services?.map((service) => (
         <Card
           key={service.id}
-          onClick={()=>handleScheduleClick(service)}
+          onClick={()=>handleServiceClick(service)}
           className="cursor-pointer rounded-2xl shadow-sm border border-border transition hover:shadow-md rounded-br-none rounded-tr-4xl"
         >
           <CardContent className="p-5 space-y-3">
