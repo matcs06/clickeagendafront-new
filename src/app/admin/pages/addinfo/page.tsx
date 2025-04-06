@@ -81,7 +81,7 @@ export default function CompleteProfileModal({open, setOpen}: ComponentProps) {
     // Enviar os dados para a API
     try {
 
-      await updateAddInfo(form.business_name,form.phone, form.address, form.welcome_message)
+      await updateAddInfo(form.business_name, removeNonNumbers(form.phone), form.address, form.welcome_message)
       toast.success("Informações adicionais atualizadas!")
     } catch {
       toast.error("Erro ao atualizar informacoes adicionais")
@@ -93,6 +93,10 @@ export default function CompleteProfileModal({open, setOpen}: ComponentProps) {
   const handleClose = () => {
     setOpen(false)
   };
+
+  const removeNonNumbers = (value:string) =>{
+    return value.replace(/\D/g, '');
+   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen} >

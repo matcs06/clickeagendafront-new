@@ -80,7 +80,8 @@ export default function CustomerInfo() {
       if (stored) {
          parsed = JSON.parse(stored)
       } 
-      setUserInfo({address: parsed.address, business_name: parsed.business_name, phone: parsed.business_name})
+      console.log(parsed.phone)
+      setUserInfo({address: parsed.address, business_name: parsed.business_name, phone: parsed.phone})
       setIsSuccess(true)
 
     } catch {

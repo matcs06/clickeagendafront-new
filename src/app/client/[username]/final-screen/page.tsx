@@ -26,7 +26,7 @@ export default function Success({
   const params = useParams()
 
   const username = params.username as string || ""
-  const whatsappUrl = `https://wa.me/${businessWhatsapp}?text=Olá, estou entrando em contato sobre meu agendamento para o serviço "${serviceName}".`
+  const whatsappUrl = `https://wa.me/+55${businessWhatsapp}?text=Olá, estou entrando em contato sobre meu agendamento do serviço: ${serviceName}.`
 
   return (
     <div className="max-w-md mx-auto p-4">
