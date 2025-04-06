@@ -72,9 +72,6 @@ export const timeFormated = (timeValue: any) => {
 
      }
   }
-
-
-
 }
 
 export const sumTime = (time1:string, time2:string) => {

@@ -45,15 +45,28 @@ export default function ChooseTime() {
   let duration = "00:00"
   
   
+  function parseDate(dateStr: string): Date {
+   const [day, month, year] = dateStr.split('/').map(Number)
+   return new Date(year, month - 1, day) // mês é zero-based
+ }
+
   const fetchAvailabilities = async()  =>  {
 
     console.log(selectedService)
    
     const user_id = localStorage.getItem("ca_admin_user_id")
 
+    const today = new Date()
+    today.setHours(0, 0, 0, 0) // zera o horário pra evitar erros de comparação
+
 
     const response = await api.get<AvailabilityFields[]>(`/availability/?user_id=${user_id}`)
-    return (response.data.sort((a, b) => getDateFromString(a.date).getTime() - getDateFromString(b.date).getTime()))
+    const filteredResponse = response.data.filter((availability: AvailabilityFields) => {
+      const availabilityDate = parseDate(availability.date)
+      return availabilityDate >= today
+    })
+   
+    return (filteredResponse.sort((a, b) => getDateFromString(a.date).getTime() - getDateFromString(b.date).getTime()))
     
   }
   
@@ -126,7 +139,7 @@ export default function ChooseTime() {
                   </p>
                )}
             </CardHeader>
-            <CardContent>
+            <CardContent className='max-w-[calc(100vw/1.1)] overflow-x-auto'>
                {/* Scroll horizontal nos dias */}
                <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-muted rounded-md">
                   {availabilities?.map((day) => (
@@ -161,7 +174,7 @@ export default function ChooseTime() {
                )}
               
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 max-w-[calc(100vw/1.1)] overflow-x-auto">
               {timesAvailable.morning_available_times.length > 0 && (
                 <>
                   <h3 className="text-sm text-muted-foreground">Manhã</h3>

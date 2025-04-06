@@ -30,6 +30,7 @@ export default function WelcomePage() {
   const fetchUser = async () => {
     const response = await api.get<IFindUserByNameService>(`/users/${username}`, {withCredentials:true});
     localStorage.setItem("ca_admin_user_id", response.data.id || "")
+    localStorage.setItem('ca_admin_info', JSON.stringify(response.data))
     return response.data ?? [];
 
   }
