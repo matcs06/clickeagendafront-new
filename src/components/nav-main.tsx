@@ -46,6 +46,12 @@ export function NavMain({
                 <SidebarMenuButton tooltip={item.title}>
                 <Link
                   href={item.url}
+                  onClick={(e) => {
+                    if (item.title === "Tela do Cliente") {
+                      e.preventDefault(); // Prevent the default link behavior
+                      window.open(item.url, 'popup', 'width=380,height=720');
+                    }
+                  }}
                   className="flex items-center gap-2 w-full overflow-hidden"
                 >
                   <span className="shrink-0">

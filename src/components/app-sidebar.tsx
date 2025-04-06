@@ -10,6 +10,7 @@ import {
   GalleryVerticalEnd,
   LayoutDashboard,
   WorkflowIcon,
+  UserCog
 } from "lucide-react";
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
@@ -70,6 +71,11 @@ const data = {
       title: "Calendário",
       url: "/admin/pages/schduller",
       icon: CalendarFold,
+    },
+    {
+      title: "Tela do Cliente",
+      url: `/client/${Cookies.get("user_name")}/start-page`,
+      icon: UserCog,
     },
   ],
 };

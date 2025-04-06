@@ -1,6 +1,7 @@
 'use client'
 
 import api from "@/api/api"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { useQuery } from "@tanstack/react-query"
 import { useParams, useRouter } from "next/navigation";
@@ -45,6 +46,17 @@ export default function WelcomePage() {
   return (
     <div className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-b from-blue-100 to-purple-200 dark:from-gray-900 dark:to-gray-800 px-6 py-12 text-center">
       <div className="w-full max-w-sm">
+        {user && (
+            <div className="mb-6 flex justify-center">
+              <Image
+                width={300}
+                height={300}
+                src="/logo_color_client.png" // or .png, .ico, depending on what you want
+                alt="Ícone da empresa"
+                className="h-16 w-16 sm:h-20 sm:w-20 object-contain"
+              />
+            </div>
+          )}
         <h1 className="text-2xl sm:text-3xl font-bold text-primary mb-4">
           Bem-vindo à <span className="text-purple-600">{user?.business_name}</span>
         </h1>

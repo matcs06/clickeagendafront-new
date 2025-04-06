@@ -117,7 +117,7 @@ function CalendarApp() {
           `Local: ${event.location ? event.location : "Sede empresa"} \n\n` +
           `Confirma?`
           
-          let wpp_link = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(confirmationText)}`
+          let wpp_link = `https://wa.me/+55${phoneNumber}?text=${encodeURIComponent(confirmationText)}`
 
 
           const valorDiv = document.createElement('div')
@@ -247,7 +247,7 @@ function CalendarApp() {
           end: schedule.date.split("/").reverse().join("-") + " " + sumTime(schedule.start_time, schedule.service_duration + ":00"),
           people: [schedule.customer_name],
           description: schedule.phone_number,
-          location: Cookies.get("address") ? Cookies.get("address") : "",
+          location: Cookies.get("address") ? String(Cookies.get("address")) : "",
           whatsappNumber: schedule.phone_number,
           date: schedule.date,
           start_time: schedule.start_time,

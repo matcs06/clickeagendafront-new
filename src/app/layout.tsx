@@ -16,6 +16,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  icons: {
+    icon: "/logo_color_client.png",
+    shortcut: "/logo_color_client.png",
+    apple: "/logo_color_client.png",
+  },
   title: "Click&Agenda",
   description: "Sitema de Agendamentos facil e rapido",
 };

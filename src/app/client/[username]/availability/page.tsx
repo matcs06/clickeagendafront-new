@@ -106,7 +106,7 @@ export default function ChooseTime() {
   }
 
   const onClickTime = (time: string) => {
-    if (time === 'X') return alert('Este horário não está disponível')
+    if (time === '❌') return toast.error('Este horário não está disponível')
     setChoosedTime(time)
   }
 
