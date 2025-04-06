@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
@@ -117,6 +117,10 @@ export default function ChooseTime() {
    }
    router.push(`/client/${username}/customer-info`)
   }
+
+  useEffect(()=>{
+    setChoosedTime("")
+  },[choosedDate])
 
   return (
    <div className="flex flex-col justify-between min-h-screen px-4 py-6 bg-gradient-to-b from-blue-100 to-purple-200 dark:from-gray-900 dark:to-gray-800">
