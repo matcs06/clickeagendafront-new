@@ -117,7 +117,7 @@ function CalendarApp() {
           `Local: ${event.location ? event.location : "Sede empresa"} \n\n` +
           `Confirma?`
           
-          const wpp_link = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(confirmationText)}`
+          let wpp_link = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(confirmationText)}`
 
 
           const valorDiv = document.createElement('div')
@@ -202,7 +202,7 @@ function CalendarApp() {
               } // assuming your event has an `id` field
             }
           })
-
+          wpp_link = ""
           // Adiciona os botões no container
           buttonContainer.appendChild(whatsappButton)
           buttonContainer.appendChild(deleteButton)
