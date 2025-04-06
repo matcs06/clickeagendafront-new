@@ -5,7 +5,7 @@ export const timeFormated = (timeValue: string = "01:00") => {
    } else {
       const timeForm = timeValue.split(":")
       if (timeValue.split(" ")[1] == "indisponível") {
-         return "❌"
+         return timeValue
       }
       if (timeForm[0] == "") {
          return ""

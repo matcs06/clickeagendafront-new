@@ -106,7 +106,7 @@ export default function ChooseTime() {
   }
 
   const onClickTime = (time: string) => {
-    if (time === '❌') return toast.error('Este horário não está disponível')
+    if (time.includes("indisponível")) return toast.error('Este horário não está disponível')
     setChoosedTime(time)
   }
 
@@ -187,11 +187,17 @@ export default function ChooseTime() {
                       <Button
                         key={time}
                         size="sm"
-                        variant={choosedTime === timeFormated(time) ? 'default' : 'outline'}
+                        variant={
+                          timeFormated(time).includes("indisponível")
+                            ? "ghost"
+                            : choosedTime === timeFormated(time)
+                              ? "default"
+                              : "outline"
+                        }
                         className={choosedTime === timeFormated(time) ? 'ring-2 ring-primary ring-offset-1' : ''}
                         onClick={() => onClickTime(timeFormated(time))}
                      >
-                        {timeFormated(time)}
+                        {!timeFormated(time).includes("indisponível") ? timeFormated(time) : "🔒"+timeFormated(time).substring(0,5)}
                      </Button>
                     ))}
                   </div>
@@ -206,11 +212,17 @@ export default function ChooseTime() {
                       <Button
                         key={time}
                         size="sm"
-                        variant={choosedTime === timeFormated(time) ? 'default' : 'outline'}
+                        variant={
+                          timeFormated(time).includes("indisponível")
+                            ? "ghost"
+                            : choosedTime === timeFormated(time)
+                              ? "default"
+                              : "outline"
+                        }
                         className={choosedTime === timeFormated(time) ? 'ring-2 ring-primary ring-offset-1' : ''}
                         onClick={() => onClickTime(timeFormated(time))}
                      >
-                        {timeFormated(time)}
+                        {!timeFormated(time).includes("indisponível") ? timeFormated(time) : "🔒"+timeFormated(time).substring(0,5)}
                      </Button>
                     ))}
                   </div>
