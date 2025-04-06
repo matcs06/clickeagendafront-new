@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
@@ -84,7 +84,7 @@ export default function ChooseTime() {
     const user_id = localStorage.getItem("ca_admin_user_id")
     try {
       const response = await api.get<AvailabilityDetails>(`/availability/details/${id}`, {
-        params: { service_duration: fixedDuration + ':00', user_id: user_id },
+        params: { service_duration: fixedDuration , user_id: user_id },
       })
       setTimesAvailable(response.data)
     } catch  {
@@ -106,8 +106,8 @@ export default function ChooseTime() {
   }
 
   return (
-    <div className="min-h-screen px-4 py-6 bg-gradient-to-b from-blue-100 to-purple-200 dark:from-gray-900 dark:to-gray-800">
-      <div className="max-w-xl mx-auto space-y-6">
+   <div className="flex flex-col justify-between min-h-screen px-4 py-6 bg-gradient-to-b from-blue-100 to-purple-200 dark:from-gray-900 dark:to-gray-800">
+    <div className="max-w-xl mx-auto space-y-6 grow">
          <Card className="bg-background/60 backdrop-blur border shadow-sm">
             <CardHeader className="text-center">
                <h1 className="text-2xl font-bold text-primary">Agendamento</h1>
@@ -203,14 +203,18 @@ export default function ChooseTime() {
           </Card>
         )}
 
-        <div className="pt-4 text-center flex flex-col justify-between">
-          <Button className='cursor-pointer' disabled={!choosedDate || !choosedTime} onClick={handleContinue}>
-            Continuar
-          </Button>
-          <Button onClick={() => router.back()} variant="outline" className='cursor-pointer mt-2'>Voltar</Button>
-
-        </div>
+        
       </div>
+
+       {/* Botões fixos no rodapé */}
+       <div className="max-w-xl mx-auto w-80 pt-4 text-center">
+            <Button className='w-full cursor-pointer' disabled={!choosedDate || !choosedTime} onClick={handleContinue}>
+            Continuar
+            </Button>
+            <Button onClick={() => router.back()} variant="outline" className='w-full cursor-pointer mt-2'>
+            Voltar
+            </Button>
+         </div>
     </div>
   )
 }

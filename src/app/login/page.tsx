@@ -32,7 +32,7 @@ export default function LoginPage() {
 
     const success = await login(credentials.username_or_email, credentials.password);
     if (success) {
-      if(Cookies.get("business_name") == null || Cookies.get("phone") == null){
+      if(!Cookies.get("business_name") || !Cookies.get("phone")){
         router.push("/admin/pages/addinfo")
       }else{
         router.push("/admin/pages/dashboard");

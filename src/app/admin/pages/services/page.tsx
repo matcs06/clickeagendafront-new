@@ -36,7 +36,7 @@ export default function Services() {
   
     try {
       const username = Cookies.get("user_name");
-      const response = await api.get(`/products?username=${username}`);
+      const response = await api.get(`/products/byusername/?username=${username}`);
   
       return response.data ?? []; // ✅ Always return an array
     } catch (error: any) {

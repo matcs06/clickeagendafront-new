@@ -13,6 +13,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import Link from "next/link";
+
 
 export function NavMain({
   items,
@@ -42,15 +44,17 @@ export function NavMain({
             <SidebarMenuItem  className="cursor-pointer">
               <CollapsibleTrigger asChild>
                 <SidebarMenuButton tooltip={item.title}>
-                    <a href={item.url} className="flex items-center">
-                      {item.icon && <item.icon className="w-4 h-4" />}
-                    </a>
-
-
-                    <a href={item.url}>
-          
-                      <span>{item.title}</span>
-                    </a>
+                <Link
+                  href={item.url}
+                  className="flex items-center gap-2 w-full overflow-hidden"
+                >
+                  <span className="shrink-0">
+                    {item.icon && <item.icon className="w-4 h-4" />}
+                  </span>
+                  <span className="truncate transition-all duration-200">
+                    {item.title}
+                  </span>
+                </Link>
                 
                 </SidebarMenuButton>
               </CollapsibleTrigger>
