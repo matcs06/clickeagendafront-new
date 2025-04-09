@@ -95,11 +95,10 @@ export default function LoginPage() {
                   name="username_or_email"
                   type="text"
                   required
-                
                 />
               </div>
               <div className="grid gap-3">
-                <div className="flex items-center">
+                <div className="flex items-center" onClick={()=> router.push("/new-password-request")}>
                   <Label htmlFor="password">Senha</Label>
                   <a
                     href="#"
