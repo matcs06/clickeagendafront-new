@@ -84,6 +84,7 @@ export default function CustomerInfo() {
       setUserInfo({address: parsed.address, business_name: parsed.business_name, phone: parsed.phone})
       setIsSuccess(true)
 
+      localStorage.removeItem("ca_selected_service")
     } catch {
       toast.error('Erro ao criar agendamento. Tente novamente.')
     }

@@ -31,14 +31,17 @@ export default function LoginPage() {
     e.preventDefault();
 
     const success = await login(credentials.username_or_email, credentials.password);
-    if (success) {
+    if (success == "true") {
       if(!Cookies.get("business_name") || !Cookies.get("phone")){
         router.push("/admin/pages/addinfo")
       }else{
         router.push("/admin/pages/dashboard");
       }
-    } else {
-      toast.error("Usuário ou senha inválidos.");
+    } else if(success == "verifyemail") {
+      router.push("/signin/confirmation-request")
+      toast.warning("Verifique seu email antes de fazer login");
+    }else{
+      toast.error("Email ou senha inválidos")
     }
   };
 

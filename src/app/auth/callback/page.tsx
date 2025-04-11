@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useAuth } from "../context/auth-context";
 import api from "@/api/api";
+import { OrbitProgress } from "react-loading-indicators";
 export default function GoogleCallback() {
   const router = useRouter();
   const { authenticateWithGoogle } = useAuth();
@@ -54,5 +55,11 @@ export default function GoogleCallback() {
     }
   }, [router, authenticateWithGoogle]);
 
-  return <p>Logging in...</p>;
+  return(
+      <div className="col-span-full flex justify-center">
+          <OrbitProgress dense color="#3d4e3d" size="small" text="" textColor="#7e4e4e" />          
+      </div>
+ 
+  ) 
+
 }

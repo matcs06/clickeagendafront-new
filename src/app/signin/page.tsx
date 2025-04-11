@@ -14,7 +14,7 @@ import { useAuth } from "@/app/auth/context/auth-context"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation";
-
+import Cookies from "js-cookie"
 declare global {
   interface Window {
     google: any;
@@ -49,8 +49,9 @@ export default function SignInPage() {
     );
     
     if (success) {
-      toast.success("Conta criada com sucesso, faça seu login!");
-      router.push("/login");
+      toast.success("Conta criada com sucesso, Verifique seu email!");
+      Cookies.set("email", credentials.email)
+      router.push("/signin/confirmation-request");
     } else {
       toast.error("Erro ao criar conta. Tente novamente.");
     }

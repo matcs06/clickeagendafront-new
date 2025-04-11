@@ -9,7 +9,7 @@ import api from "@/api/api";
 interface AuthContextType {
   access_token: string | null;
   user_id: string | null; 
-  login: (username_or_email: string, password: string) => Promise<boolean>;
+  login: (username_or_email: string, password: string) => Promise<"true" | "false" | "verifyemail">;
   logout: () => void;
   signUp: (name:string, user_name: string, email:string, password:string) => Promise<boolean>;
   authenticateWithGoogle: (user_name:string, token:string, user_id:string, name:string, email:string, is_verified:boolean) => void;
@@ -59,6 +59,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (!response.data) throw new Error("Invalid credentials");
 
+      if(!response.data.user.is_verified){
+        return "verifyemail"
+      }
+
       const data = await response.data;
       Cookies.set("token", data.access_token, { expires: 1 / 96 }); // 1/96 of a day = 15 minutes
       Cookies.set("user_id", data.user.user_id); // Store user_id
@@ -70,10 +74,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       Cookies.set("is_verified", String(data.user.is_verified))
       Cookies.set("address", data.user.address)
       setToken(data.access_token);
-      return true;
+      return "true";
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      return false;
+      return "false";
     }
   };
 
