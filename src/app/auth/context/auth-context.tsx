@@ -12,10 +12,10 @@ interface AuthContextType {
   login: (username_or_email: string, password: string) => Promise<"true" | "false" | "verifyemail">;
   logout: () => void;
   signUp: (name:string, user_name: string, email:string, password:string) => Promise<boolean>;
-  authenticateWithGoogle: (user_name:string, token:string, user_id:string, name:string, email:string, is_verified:boolean) => void;
+  authenticateWithGoogle: (user_name:string, token:string, user_id:string, name:string, email:string, stripeSubscriptionId:string) => void;
   refreshBeforeRequest: (token:string | undefined) => Promise<void>;
   updateAddInfo: (business_name:string, phone:string, address:string, welcome_message:string) => Promise<boolean>
-  getUserInfo: ()=> {user_id: string | null, name: string | null, email: string | null, business_name: string | null, user_name: string | null, is_verified: string |null}
+  getUserInfo: ()=> {user_id: string | null, name: string | null, email: string | null, business_name: string | null, user_name: string | null, stripeSubscriptionId: string | null}
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -71,8 +71,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       Cookies.set("email", data.user.email)
       Cookies.set("business_name", data.user.business_name); // Store business_name
       Cookies.set("phone", data.user.phone)
-      Cookies.set("is_verified", String(data.user.is_verified))
       Cookies.set("address", data.user.address)
+      Cookies.set("stripeSubscriptionId", data.user.stripeSubscriptionId)
       setToken(data.access_token);
       return "true";
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -150,8 +150,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     Cookies.remove("user_name");
     Cookies.remove("email")
     Cookies.remove("phone")
-    Cookies.remove("is_verified")
     Cookies.remove("address")
+    Cookies.remove("stripeSubscriptionId")
 
     setToken(null);
     setUserId(null);
@@ -159,14 +159,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   };
 
-  const authenticateWithGoogle = async (user_name:string, token:string, user_id:string, name:string, email: string, is_verified: boolean)  => { 
+  const authenticateWithGoogle = async (user_name:string, token:string, user_id:string, name:string, email: string, stripeSubscriptionId: string)  => { 
     Cookies.set("token", token, { expires: 1 / 96 }); // 1/96 of a day = 15 minutes
     Cookies.set("user_id", user_id); // Store user_id
     Cookies.set("name", name); // Store user_name
     Cookies.set("user_name", user_name); // Store user_name
     Cookies.set("email", email )
-    Cookies.set("is_verified", String(is_verified))
-
+    Cookies.set("stripeSubscriptionId", stripeSubscriptionId)
   };
 
   // Function to fetch user data from cookies
@@ -176,7 +175,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     email: Cookies.get("email") ?? null,
     business_name: Cookies.get("business_name") ?? null,
     user_name: Cookies.get("user_name") ?? null,
-    is_verified: Cookies.get("is_verified") ?? null
+    stripeSubscriptionId: Cookies.get("stripeSubscriptionId") ?? null
   });
 
   return (

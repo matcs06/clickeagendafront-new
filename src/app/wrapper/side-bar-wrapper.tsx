@@ -6,7 +6,7 @@ import { AppSidebar } from "@/components/app-sidebar"
 import { ReactNode } from "react";
 import { useMediaQuery } from "react-responsive";
 import { useAuth } from "../auth/context/auth-context";
-import EmailVerification from "../admin/pages/email-verification/page";
+import PlansPage from "@/app/admin/pages/payment/plans/page";
 
 export function SidebarWrapper({ children }: { children: ReactNode }) {
   const pathname = usePathname();
@@ -14,11 +14,13 @@ export function SidebarWrapper({ children }: { children: ReactNode }) {
 
   const {getUserInfo} = useAuth()
   const userInfo = getUserInfo()
-  const authRoutes = ["/login", "/signin"];
+  const authRoutes = ["/login", "/signin", "/admin/pages/payments/success"];
+  const childrenmod = <PlansPage/>
+     
+  const showPaymentPlansPage = userInfo.stripeSubscriptionId === null && !pathname.includes(authRoutes[0]) && !pathname.includes(authRoutes[1]) && !pathname.includes(authRoutes[2])
 
-  const childrenmod = <EmailVerification/>
   
-  const showEmailVerificationPage = userInfo.is_verified == "false" && !pathname.includes(authRoutes[0]) && !pathname.includes(authRoutes[1]) 
+  console.log(showPaymentPlansPage)
   // Define routes where the sidebar should be hidden
   return (
     !authRoutes.includes(pathname) ? (
@@ -29,7 +31,7 @@ export function SidebarWrapper({ children }: { children: ReactNode }) {
              <SidebarTrigger className="cursor-pointer"/>
           </div>
         )}
-        {!showEmailVerificationPage ? 
+        {!showPaymentPlansPage ? 
           children : childrenmod}
       </SidebarProvider>
     ) : (

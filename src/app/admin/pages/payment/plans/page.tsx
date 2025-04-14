@@ -53,7 +53,7 @@ export default function PlansPage() {
 
   return (
     <div className="max-w-4xl mx-auto py-10">
-      <h1 className="text-3xl font-bold text-center mb-8">Escolha seu plano</h1>
+      <h1 className="text-3xl font-bold text-center mb-8">Seja bem Vindo! Para começar, escolha seu plano</h1>
       <div className="grid md:grid-cols-2 gap-6">
         {plans.map(plan => (
           <Card key={plan.name} className="flex flex-col justify-between">

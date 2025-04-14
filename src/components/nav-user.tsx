@@ -29,6 +29,7 @@ import { useAuth } from "@/app/auth/context/auth-context"
 import { ModeToggle } from "./mode-toogle"
 import CompleteProfileModal from "@/app/admin/pages/addinfo/page"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 export function NavUser({
   user,
@@ -40,11 +41,15 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar()
 
+  const router = useRouter()
+  
   const {logout} = useAuth()
   const [ openAdditionalInfo, setOpenAdditionalInfo] = useState(false)
   const handleAddInfo = () =>{
    setOpenAdditionalInfo(!openAdditionalInfo) 
   }
+
+
 
   return (
     <>
@@ -87,9 +92,9 @@ export function NavUser({
                 <Settings2Icon />
                 Informações adicionais
               </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer">
+              <DropdownMenuItem onClick={()=> router.push("/admin/pages/subscription")} className="cursor-pointer">
                 <CreditCard />
-                Pagamentos
+                Assinatura
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

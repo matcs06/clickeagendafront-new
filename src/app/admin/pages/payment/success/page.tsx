@@ -4,7 +4,6 @@ import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import api from '@/api/api'
 import Link from 'next/link'
-
 export default function SuccessPage() {
   const searchParams = useSearchParams()
   const sessionId = searchParams.get('session_id')
@@ -20,20 +19,11 @@ export default function SuccessPage() {
 
             try {
                const response = await api.get(`/payments/confirm-subscription?session_id=${sessionId}`)
-
-               const price = response.data?.items?.data[0]?.price
-               const plan = (price?.metadata?.plan_name ?? "FREE") as "STANDARD" | "PRO" | "FREE"
-               
-               const planLabel = plan === "PRO" 
-               ? "Profissional" 
-               : plan === "STANDARD" 
-                  ? "Essencial" 
-                  : "Gratuito"
-            
-               setMessage(`Pagamento realizado com sucesso! Bem-vindo ao plano ${planLabel} 🎉`)
+               setMessage(`Pagamento realizado com sucesso! Bem-vindo ao Click&Agenda 🎉`)
                console.log("Subscription received:", response.data)
                setSuccess(true)
                setLoading(false)
+
             } catch  {
                setMessage('Pagamento realizado, mas houve um problema ao confirmar. Entre em contato.')
                setSuccess(false)
