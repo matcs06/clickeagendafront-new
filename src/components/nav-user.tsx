@@ -90,7 +90,7 @@ export function NavUser({
             <DropdownMenuGroup>
               <DropdownMenuItem onClick={handleAddInfo} className="cursor-pointer">
                 <Settings2Icon />
-                Informações adicionais
+                Informações da Empresa
               </DropdownMenuItem>
               <DropdownMenuItem onClick={()=> router.push("/admin/pages/subscription")} className="cursor-pointer">
                 <CreditCard />

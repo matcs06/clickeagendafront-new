@@ -126,6 +126,18 @@ export default function Dashboard() {
       return acc;
    }, [] as { day: string; quantidade: number }[]);
 
+   const mostLucrativeService = filteredSchedules?.reduce((acc, schedule) => {
+      const service = schedule.service;
+      const value = parseFloat(schedule.value.replace(",", "."));
+      const existingService = acc.find((s) => s.service === service);
+      if (existingService) {
+         existingService.value += value;
+      } else {
+         acc.push({ service, value });
+      }
+      return acc;
+   }, [] as { service: string; value: number }[]);
+
   return (
     <div className="p-6 space-y-6 w-full">
       <h1 className="text-2xl font-semibold">Dashboard</h1>
@@ -249,7 +261,7 @@ export default function Dashboard() {
 
         <Card>
           <CardContent className="min-w-auto w-full">
-            <h2 className="text-lg font-medium mb-4">Distribuição de serviços</h2>
+            <h2 className="text-lg font-medium mb-4">Atendimento por serviço</h2>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
@@ -263,6 +275,30 @@ export default function Dashboard() {
                   label={({ name, percent }) => `${name.split("-")[0]} (${(percent * 100).toFixed(0)}%)`}
                 >
                   {serviceDistribution?.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+              </PieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="min-w-auto w-full">
+            <h2 className="text-lg font-medium mb-4">Rendimento por serviço</h2>
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={mostLucrativeService}
+                  dataKey="value"
+                  nameKey="service"
+                  cx="50%"
+                  cy="50%"
+                  fontSize={12}
+                  outerRadius={100}
+                  //label={({ name, percent }) => `${name.split("-")[0]} (${(percent * 100).toFixed(0)}%)`}
+                  label={({ name, value }) => `${name.split("-")[0]} (R$${value.toFixed(2)})`}
+                >
+                  {mostLucrativeService?.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
