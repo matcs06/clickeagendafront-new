@@ -7,7 +7,7 @@ import api from "@/api/api"
 import Cookies from "js-cookie"
 
 const plan = {
-  name: "Plano Essencial (Pequeno negócio)",
+  name: "Plano Essencial",
   benefits: [
     "Agendamentos ilimitadas",
     "Dashboard e calendaário de agendamentos",

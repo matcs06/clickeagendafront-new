@@ -69,7 +69,7 @@ export default function Dashboard() {
       await refreshBeforeRequest(token)
 
       token = Cookies.get("token");
-      
+      await api.get("/isauthenticated", { headers: { Authorization: `Bearer ${token}` }, withCredentials: true })
       const response = await api.get<Schedules[]>(`/schedules?user_id=${user_id}`, 
          { headers: {Authorization: `Bearer ${token}`}, withCredentials:true})
 
