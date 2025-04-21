@@ -140,7 +140,6 @@ function CalendarApp() {
             gap: 12px;
             justify-content: space-between;
             align-items: space-between;
-
             margin-top: 12px;
             flex-wrap: wrap;
           `

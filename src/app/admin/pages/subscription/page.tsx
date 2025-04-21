@@ -84,9 +84,9 @@ export default function MyPlanPage() {
     data.plan === 'STANDARD' ? 'Essencial' : 'Gratuito'
 
   return (
-    <div className="w-full px-4 md:px-8 py-10 bg-background min-h-screen">
+    <div className="p-6 max-w-4xl mx-auto bg-background rounded-lg shadow-md w-full ">
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-3xl font-semibold mb-6">Informações do Plano</h1>
+        <h1 className="text-2xl font-semibold mb-6">Informações do Plano</h1>
         <Card className="rounded-2xl shadow-md">
           <CardContent className="p-6 grid gap-4">
             {!data.cancel_at_period_end && (
