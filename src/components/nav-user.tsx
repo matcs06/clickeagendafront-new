@@ -30,7 +30,8 @@ import { ModeToggle } from "./mode-toogle"
 import CompleteProfileModal from "@/app/admin/pages/addinfo/page"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-
+import Cookies from "js-cookie"
+import { UserAvatar } from "./ui/iconize"
 export function NavUser({
   user,
 }: {
@@ -49,6 +50,7 @@ export function NavUser({
    setOpenAdditionalInfo(!openAdditionalInfo) 
   }
 
+  const [buser, ] = useState({email: Cookies.get("user_name") || "Usuário", avatar: <UserAvatar name={Cookies.get("user_name")}/>})
 
 
   return (
@@ -62,10 +64,10 @@ export function NavUser({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                {user.avatar}
+                {buser.avatar}
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate text-xs">{user.email}</span>
+                <span className="truncate text-xs">{buser.email}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
