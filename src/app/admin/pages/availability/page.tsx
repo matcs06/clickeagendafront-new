@@ -75,7 +75,7 @@ export default function Availabilities() {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto rounded-lg shadow-md w-full">
+    <div className="p-6 mt-3 ml-4 border-2 max-w-[80%] mx-auto rounded-lg shadow-md w-full">
       <div className="flex justify-between items-center mb-10 border-b pb-5">
         <h3 className="text-xl font-semibold mr-7 text-foreground">Horários</h3>
         <Dialog>
@@ -96,7 +96,7 @@ export default function Availabilities() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 min-h-[200px]">
         {!loading &&
           availabilities?.map((availability: Availability) => (
-            <Card key={availability.id} className={`hover:shadow-lg transition-shadow flex flex-col bg-background`}>
+            <Card key={availability.id} className={`hover:shadow-lg transition-shadow flex flex-col bg-background min-w-52 max-w-3xs`}>
               <CardHeader>
                   <div className="text-center mb-2">
                      <p className="text-sm font-medium text-muted-foreground">

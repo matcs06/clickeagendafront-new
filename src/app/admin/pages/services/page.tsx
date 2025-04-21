@@ -86,7 +86,7 @@ export default function Services() {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto  rounded-lg shadow-md w-full">
+    <div className="p-6 mt-3 ml-4 border-2 max-w-[80%] mx-auto  rounded-lg shadow-md w-full">
       <div className="flex justify-between items-center mb-10 border-b pb-5">
         <h3 className="text-xl font-semibold text-foreground">Serviços</h3>
        <Dialog>
@@ -108,11 +108,11 @@ export default function Services() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 min-h-[200px]">
       {loading == false && (
           services?.map((service: Service) => (
-            <Card key={service.id}   className={`hover:shadow-lg transition-shadow flex flex-col bg-background min-w-52 flex-grow ${
+            <Card key={service.id}   className={`hover:shadow-lg transition-shadow flex flex-col bg-background min-w-52 max-w-2xs flex-grow ${
               !service.enabled ? "opacity-70 bg-muted" : "bg-background"
             }`}>
               <CardHeader className="flex flex-row justify-between items-center">
-                <CardTitle className="text-lg font-semibold">{service.name.split("-")[0]}</CardTitle>
+                <CardTitle className="text-md font-semibold">{service.name.split("-")[0]}</CardTitle>
 
                 <Dialog>
                     <DialogTrigger asChild>
