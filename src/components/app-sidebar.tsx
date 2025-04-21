@@ -3,11 +3,8 @@
 import dynamic from "next/dynamic";
 import * as React from "react";
 import {
-  AudioWaveform,
   CalendarFold,
   Clock10Icon,
-  Command,
-  GalleryVerticalEnd,
   LayoutDashboard,
   WorkflowIcon,
   UserCog
@@ -27,64 +24,49 @@ import {
 import { UserAvatar } from "./ui/iconize";
 import { TeamSwitcher } from "@/components/team-switcher";
 import Cookies from "js-cookie";
-// This is sample data.
-const data = {
-  user: {
-    email: Cookies.get("user_name") || "Usuário",
-    avatar: <UserAvatar name={Cookies.get("user_name")}/>,
-  },
-  teams: [
-    {
-      name: "BN",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "/admin/pages/dashboard",
-      icon: LayoutDashboard,
-      isActive: true,
-    },
-    {
-      title: "Serviços",
-      url: "/admin/pages/services",
-      icon: WorkflowIcon,
-    },
-    {
-      title: "Horários",
-      url: "/admin/pages/availability",
-      icon: Clock10Icon,
-    },
-    {
-      title: "Calendário",
-      url: "/admin/pages/schduller",
-      icon: CalendarFold,
-    },
-    {
-      title: "Tela do Cliente",
-      url: `/client/${Cookies.get("user_name")}/start-page`,
-      icon: UserCog,
-    },
-  ],
-};
 
 // Define component normally
 function AppSidebarComponent({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const {state, isMobile} = useSidebar()
   
+  const [data,] = React.useState(
+    {
+      user: {
+        email: Cookies.get("user_name") || "Usuário",
+        avatar: <UserAvatar name={Cookies.get("user_name")}/>,
+      },
+      navMain: [
+        {
+          title: "Dashboard",
+          url: "/admin/pages/dashboard",
+          icon: LayoutDashboard,
+          isActive: true,
+        },
+        {
+          title: "Serviços",
+          url: "/admin/pages/services",
+          icon: WorkflowIcon,
+        },
+        {
+          title: "Horários",
+          url: "/admin/pages/availability",
+          icon: Clock10Icon,
+        },
+        {
+          title: "Calendário",
+          url: "/admin/pages/schduller",
+          icon: CalendarFold,
+        },
+        {
+          title: "Tela do Cliente",
+          url: `/client/${Cookies.get("user_name")}/start-page`,
+          icon: UserCog,
+        },
+      ],
+    }
+  )
+
   
   return (
     <Sidebar collapsible="icon" {...props}>

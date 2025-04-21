@@ -14,8 +14,8 @@ import {
 
 export function TeamSwitcher(){
   
-  const name = Cookies.get("name") == null ? "Nome" : Cookies.get("name")
-  const business_name = Cookies.get("business_name") == null ? "Empresa" : Cookies.get("business_name")
+  const [name,] = React.useState(Cookies.get("name") || "Nome")
+  const [business_name,] = React.useState(Cookies.get("business_name") || "Empresa")
   
   return (
     <SidebarMenu>

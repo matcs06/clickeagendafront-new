@@ -86,7 +86,7 @@ export default function Services() {
   };
 
   return (
-    <div className="p-6 mt-3 ml-4 border-2 max-w-[80%] mx-auto  rounded-lg shadow-md w-full">
+    <div className="p-6 mt-1 ml-2 border-2 max-w-[80%] mx-auto  rounded-lg shadow-md w-full">
       <div className="flex justify-between items-center mb-10 border-b pb-5">
         <h3 className="text-xl font-semibold text-foreground">Serviços</h3>
        <Dialog>
