@@ -93,10 +93,10 @@ export default function Availabilities() {
         </Dialog>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 min-h-[200px]">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {!loading &&
           availabilities?.map((availability: Availability) => (
-            <Card key={availability.id} className={`hover:shadow-lg transition-shadow flex flex-col bg-background min-w-52 max-w-3xs`}>
+            <Card key={availability.id} className={`hover:shadow-lg transition-shadow flex flex-col bg-background min-w-52 max-w-3xs min-h-[280px]`}>
               <CardHeader>
                   <div className="text-center mb-2">
                      <p className="text-sm font-medium text-muted-foreground">
