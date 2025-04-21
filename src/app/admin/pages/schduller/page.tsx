@@ -260,7 +260,6 @@ function CalendarApp() {
           end: schedule.date.split("/").reverse().join("-") + " " + sumTime(schedule.start_time, schedule.service_duration + ":00"),
           people: [schedule.customer_name],
           description: schedule.phone_number,
-          location: Cookies.get("address") ? String(Cookies.get("address")) : "",
           whatsappNumber: schedule.phone_number,
           date: schedule.date,
           start_time: schedule.start_time,

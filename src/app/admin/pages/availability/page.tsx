@@ -75,7 +75,7 @@ export default function Availabilities() {
   };
 
   return (
-    <div className="p-6 mt-1 ml-2 border-2 max-w-[80%] mx-auto rounded-lg shadow-md w-full">
+    <div className="p-6 mt-2 ml-2 mr-2 border-2 max-w-[100%] mx-auto rounded-md shadow-sm w-full">
       <div className="flex justify-between items-center mb-10 border-b pb-5">
         <h3 className="text-xl font-semibold mr-7 text-foreground">Horários</h3>
         <Dialog>
