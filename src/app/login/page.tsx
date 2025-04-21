@@ -14,7 +14,6 @@ import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import {  useRouter } from "next/navigation";
 import Cookies from "js-cookie"
-import api from "@/api/api"
 declare global {
   interface Window {
     google: any;
