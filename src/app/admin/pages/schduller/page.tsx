@@ -150,31 +150,45 @@ function CalendarApp() {
           whatsappButton.className = 'whatsapp-button'
           whatsappButton.textContent = 'Confirmar via WhatsApp'
           whatsappButton.style.cssText = `
-            padding: 8px 16px;
-            background-color: #25D366;
-            color: white;
-            border-radius: 4px;
-            text-align: center;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 12px;
-            cursor: pointer;
-          `
+          padding: 8px 16px;
+          background-color: transparent;
+          color: #128C7E; /* dark green */
+          border: 2px solid #128C7E;
+          border-radius: 4px;
+          text-align: center;
+          text-decoration: none;
+          font-weight: bold;
+          font-size: 12px;
+          cursor: pointer;
+        `
+
+        whatsappButton.addEventListener("mouseenter", () => {
+          whatsappButton.style.backgroundColor = "#e0f7ec"; // light green background on hover
+        });
+        whatsappButton.addEventListener("mouseleave", () => {
+          whatsappButton.style.backgroundColor = "transparent";
+        });
 
           const deleteButton = document.createElement('button')
           deleteButton.textContent = 'Excluir'
           deleteButton.className = 'delete-button'
-          deleteButton.style.cssText =`
-            padding: 8px 16px;
-            background-color: #e53935;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            text-align: center;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 12px;
-          `
+          deleteButton.style.cssText = `
+          padding: 8px 16px;
+          background-color: transparent;
+          color: #c62828; /* dark red */
+          border: 2px solid #c62828;
+          border-radius: 4px;
+          text-align: center;
+          font-weight: bold;
+          cursor: pointer;
+          font-size: 12px;
+        `
+        deleteButton.addEventListener("mouseenter", () => {
+          deleteButton.style.backgroundColor = "#fcebea"; // light red
+        });
+        deleteButton.addEventListener("mouseleave", () => {
+          deleteButton.style.backgroundColor = "transparent";
+        });
           
           deleteButton.addEventListener('click', async () => {
             const confirmDelete = confirm('Tem certeza que deseja excluir este agendamento?')

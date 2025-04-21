@@ -8,7 +8,7 @@ export function PlanExpiredModal({ open, onClose }: { open: boolean; onClose: ()
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Escolha um plano</DialogTitle>
+          <DialogTitle>Você ainda não tem um plano</DialogTitle>
         </DialogHeader>
          <PlansPage/>
       </DialogContent>

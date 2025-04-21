@@ -86,11 +86,11 @@ export default function Services() {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
+    <div className="p-6 max-w-4xl mx-auto  rounded-lg shadow-md w-full">
       <div className="flex justify-between items-center mb-10 border-b pb-5">
-        <h3 className="text-xl font-semibold mr-7 text-foreground">Serviços</h3>
+        <h3 className="text-xl font-semibold text-foreground">Serviços</h3>
        <Dialog>
-          <DialogTrigger asChild>
+          <DialogTrigger  asChild>
             <Button className="flex gap-2 cursor-pointer">
               <Plus size={16} /> Novo Serviço
             </Button>

@@ -125,7 +125,7 @@ export default function ChooseTime() {
   return (
    <div className="flex flex-col justify-between min-h-screen px-4 py-6 bg-gradient-to-b from-blue-100 to-purple-200 dark:from-gray-900 dark:to-gray-800">
     <div className="max-w-xl mx-auto space-y-6 grow">
-         <Card className="bg-background/60 backdrop-blur border shadow-sm">
+         <Card className=" bg-background/60 backdrop-blur border shadow-sm min-w-[calc(100vw/1.1)]">
             <CardHeader className="text-center">
                <h1 className="text-2xl font-bold text-primary">Agendamento</h1>
                {serviceName && (
