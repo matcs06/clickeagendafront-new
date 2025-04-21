@@ -14,6 +14,7 @@ import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import {  useRouter } from "next/navigation";
 import Cookies from "js-cookie"
+import api from "@/api/api"
 declare global {
   interface Window {
     google: any;
@@ -22,11 +23,12 @@ declare global {
 
 
 export default function LoginPage() {
-  const { login } = useAuth();
+  const { login, refreshBeforeRequest } = useAuth();
   
   const router = useRouter();
   const [credentials, setCredentials] = useState({ username_or_email: "", password: "" });
   const [nonce, setNonce] = useState("")
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -50,12 +52,31 @@ export default function LoginPage() {
       return Math.random().toString(36).substring(2, 15);  // Generates a random string
     };
 
+
+
     setNonce(generateNonce)
     sessionStorage.setItem("google_nonce", nonce);  // Store it temporarily for later validation
 
+    const checkSession = async () => {
+      try {
+
+        const token = Cookies.get("token");
+
+        await refreshBeforeRequest(token)
+  
+        console.log("passou aqui 2")
+
+        router.push("/admin/pages/dashboard");
+        
+      } catch  {
+        console.log("User not authenticated");
+      }
+    };
+
+    checkSession();
+
     return ()=>{}
   },[])
-  
   
   const handleGoogleLogin = async () => {
 
