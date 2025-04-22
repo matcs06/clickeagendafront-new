@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation"
 
 import {users} from "@/lib/customInterfaceUsers"
 import { toast } from "sonner"
+import { usePlanModal } from "@/app/auth/context/payment-context"
 
 const defaultPlan = {
   name: "Plano Essencial",
@@ -37,6 +38,8 @@ export default function PlansPage() {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly")
   const [loading, setLoading] = useState(false)
   const [plan, setPlan] = useState(defaultPlan)
+    const { hidePlanModal } = usePlanModal();
+  
 
     const router = useRouter()
   
@@ -102,6 +105,7 @@ export default function PlansPage() {
        
       )
       toast.success("Plano gratuito ativado com sucesso!")
+      hidePlanModal()
       router.push("/admin/pages/payment/free-trial")
     } catch  {
       toast.error("Erro ao ativar plano gratuito")
