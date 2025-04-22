@@ -5,8 +5,10 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import api from "@/api/api"
 import Cookies from "js-cookie"
+import { useRouter } from "next/navigation"
 
 import {users} from "@/lib/customInterfaceUsers"
+import { toast } from "sonner"
 
 const defaultPlan = {
   name: "Plano Essencial",
@@ -34,9 +36,10 @@ const defaultPlan = {
 export default function PlansPage() {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly")
   const [loading, setLoading] = useState(false)
-
   const [plan, setPlan] = useState(defaultPlan)
 
+    const router = useRouter()
+  
 
   useEffect(()=>{
     const username = Cookies.get("user_name")
@@ -73,7 +76,6 @@ export default function PlansPage() {
     try {
       const user_id = Cookies.get("user_id")
 
-
       const response = await api.post("/payments/create-checkout-session", {
         user_id,
         price_id: billingCycle === "monthly" ? plan.prices.monthly.id : plan.prices.yearly.id,
@@ -87,6 +89,27 @@ export default function PlansPage() {
       setLoading(false)
     }
   }
+
+  const handleFreeTrial = async () => {
+    setLoading(true)
+    try {
+      const user_id = Cookies.get("user_id")
+      
+      console.log("passou aqui 1")
+      await api.post(
+        "/payments/free-trial",
+        { userId: user_id }, // Body
+       
+      )
+      toast.success("Plano gratuito ativado com sucesso!")
+      router.push("/admin/pages/payment/free-trial")
+    } catch  {
+      toast.error("Erro ao ativar plano gratuito")
+    } finally {
+      setLoading(false)
+    }
+  }
+
 
   return (
     <div className="max-w-3xl mx-auto py-10 px-4">
@@ -125,6 +148,14 @@ export default function PlansPage() {
             disabled={loading}
           >
             {loading ? "Redirecionando..." : "Assinar plano"}
+          </Button>
+          <Button
+            variant="outline"
+            className="w-full cursor-pointer mt-2"
+            onClick={handleFreeTrial}
+            disabled={loading}
+          >
+            {loading ? "Ativando..." : "Plano gratuito (30 dias) sem cartão"}
           </Button>
         </CardContent>
       </Card>

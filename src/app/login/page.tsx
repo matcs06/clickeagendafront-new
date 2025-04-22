@@ -33,11 +33,8 @@ export default function LoginPage() {
 
     const success = await login(credentials.username_or_email, credentials.password);
     if (success == "true") {
-      if(!Cookies.get("business_name") || !Cookies.get("phone")){
-        router.push("/admin/pages/addinfo")
-      }else{
-        router.push("/admin/pages/dashboard");
-      }
+      router.push("/admin/pages/dashboard");
+  
     } else if(success == "verifyemail") {
       router.push("/signin/confirmation-request")
       toast.warning("Verifique seu email antes de fazer login");

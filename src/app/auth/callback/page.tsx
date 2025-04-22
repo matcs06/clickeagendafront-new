@@ -41,7 +41,7 @@ export default function GoogleCallback() {
           authenticateWithGoogle(user.username, access_token, user.user_id, user.name, user.email, user.stripeSubscriptionId);
 
           // Redirect to the dashboard
-          router.push("/admin/pages/services");
+          router.push("/admin/pages/dashboard");
         } else {
           toast.error("Authentication failed");
         }
