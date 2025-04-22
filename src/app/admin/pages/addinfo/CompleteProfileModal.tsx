@@ -19,12 +19,11 @@ interface User{
   address: string;
 }
 
-interface ComponentProps{
+type ComponentProps = {
   open: boolean;
-  setOpen: any 
-}
-
-export default function CompleteProfileModal({open, setOpen}: ComponentProps) {
+  setOpen: (value: boolean) => void;
+};
+export default function CompleteProfileModal({open, setOpen}:ComponentProps )  {
 
   const [form, setForm] = useState({
     business_name: "",

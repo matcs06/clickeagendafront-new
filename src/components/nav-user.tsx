@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/sidebar"
 import { useAuth } from "@/app/auth/context/auth-context"
 import { ModeToggle } from "./mode-toogle"
-import CompleteProfileModal from "@/app/admin/pages/addinfo/page"
+import CompleteProfileModal from "@/app/admin/pages/addinfo/CompleteProfileModal"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Cookies from "js-cookie"

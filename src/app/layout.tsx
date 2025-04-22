@@ -5,6 +5,7 @@ import "./globals.css";
 import { QueryProvider } from "./providers/query-provider";
 import { AuthProvider } from "./auth/context/auth-context";
 import { Toaster } from "sonner";
+import { Suspense } from "react";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -37,9 +38,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          <QueryProvider>
-          {children}
-          </ QueryProvider>
+            <QueryProvider>
+              <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading...</div>}>
+                {children}
+              </Suspense>
+            </ QueryProvider>
           <Toaster position="top-right" richColors />
         </AuthProvider>
           

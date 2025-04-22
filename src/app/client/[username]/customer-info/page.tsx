@@ -10,7 +10,7 @@ import api from '@/api/api' // ajuste para seu caminho real
 import { BRLReais } from '@/lib/utils' // ajuste se necessário
 import { toast } from 'sonner'
 import { useService } from '@/app/auth/context/service-context'
-import Success from '../final-screen/page'
+import Success from '../final-screen/Success'
 import { MaskedPhoneInput } from '@/components/ui/phone-input'
 
 //import InputMask from 'react-input-mask'
