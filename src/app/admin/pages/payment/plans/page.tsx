@@ -19,11 +19,11 @@ const defaultPlan = {
   ],
   prices: {
     monthly: {
-      id: "price_1RF0kiP5Lov1Z48BU4h2Vjqk", // Stripe ID mensal
+      id: "price_1RGVPkP5Lov1Z48BsX2GrGXc", // Stripe ID mensal
       label: "R$49,99/mês",
     },
     yearly: {
-      id: "price_1RF0sqP5Lov1Z48B1MmHrFuU", // Stripe ID anual
+      id: "price_1RGVQiP5Lov1Z48BAtOt8gfe", // Stripe ID anual
       label: "R$419,99/ano (30% off)", // 12x R$49,99 = R$599,88 → R$419,90
     },
   },
@@ -55,11 +55,11 @@ export default function PlansPage() {
         ],
         prices: {
           monthly: {
-            id: "price_1RF0sqP5Lov1Z48Bhhy0uRJR",
+            id: "price_1RGVRfP5Lov1Z48BNgvo97qx",
             label: "R$129,99/mês",
           },
           yearly: {
-            id: "price_1RG8ORP5Lov1Z48BIx9mdHV0",
+            id: "price_1RGVSQP5Lov1Z48B7cqOf6wd",
             label: "R$1091,99/ano (30% off)",
           },
         },
