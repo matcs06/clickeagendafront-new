@@ -6,10 +6,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch"; // Import a switch component (or use a checkbox)
 import { cn } from "@/lib/utils";
-import axios from "axios";
 import { toast } from "sonner"; // Import the toast library
 import Cookies from "js-cookie";
 import { useAuth } from "@/app/auth/context/auth-context";
+import api from "@/api/api";
 
 
 interface UpdateServiceModalProps {
@@ -52,8 +52,8 @@ export default function UpdateServiceModal({ onServiceCreated, service }: Update
 
       token = Cookies.get("token");
 
-      await axios.patch(
-        "http://localhost:3333/products/" + service.id,
+      await api.patch(
+        "/products/" + service.id,
         { name: name + "-" + user_id, description, price, duration, user_id, enabled },
         { headers: { Authorization: `Bearer ${token}` } }
       );
