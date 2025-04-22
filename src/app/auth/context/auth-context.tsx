@@ -59,10 +59,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (!response.data) throw new Error("Invalid credentials");
 
-      if(!response.data.user.is_verified){
-        return "verifyemail"
+      if(response.data.email){
+        if(!response.data.user.is_verified){
+          return "verifyemail"
+        }
       }
-
+    
       const data = await response.data;
       Cookies.set("token", data.access_token, { expires: 1 / 96 }); // 1/96 of a day = 15 minutes
       Cookies.set("user_id", data.user.user_id); // Store user_id
