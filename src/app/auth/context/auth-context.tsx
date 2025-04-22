@@ -59,7 +59,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (!response.data) throw new Error("Invalid credentials");
 
-      if(response.data.email){
+      if(response.data.user.email !== null){
+      
         if(!response.data.user.is_verified){
           return "verifyemail"
         }
