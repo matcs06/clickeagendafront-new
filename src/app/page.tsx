@@ -24,17 +24,17 @@ export default function LandingPage() {
         <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mb-6">
           <div className="flex items-center justify-center">
             <Image 
-              width={80} 
-              height={80} 
+              width={200} 
+              height={200} 
               src="/logo_color2.png" 
               alt="Logo" 
               className="w-16 h-16 md:w-20 md:h-20"
             />
           </div>
-          <div className="flex flex-col items-center md:items-start">
+          <div className="flex flex-col items-center mb-1 md:items-start">
             <h1 className="text-2xl md:text-3xl font-bold text-white">Bem-vindo ao</h1>
             <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-yellow-300">
-              Click<span className="text-white">&</span>Agenda
+              Click&Agenda
             </h1>
           </div>
         </div>
