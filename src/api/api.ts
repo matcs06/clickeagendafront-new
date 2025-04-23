@@ -1,6 +1,6 @@
 import axios from "axios";
 //  baseURL: "http://localhost:3333/",
-const env = "dev";
+const env = "prod";
 const api = axios.create({
   baseURL: env === "prod" ? "https://api.clickeagenda.com.br" : "http://localhost:3001",
 });
