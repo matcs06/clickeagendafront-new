@@ -82,7 +82,7 @@ export default function LandingPage() {
 
       {/* Plano */}
       <section className="py-12 md:py-20 px-4 bg-gray-50 text-center">
-        <h2 className="text-2xl md:text-3xl font-bold mb-6">Plano Simples</h2>
+        <h2 className="text-2xl md:text-3xl font-bold mb-6">Plano Essencial</h2>
         <Card className="max-w-md mx-auto p-6 md:p-8 rounded-3xl shadow-2xl">
           <CardContent>
             <h3 className="text-3xl md:text-5xl font-bold mb-4 text-indigo-600">R$ 49,99/mês</h3>
