@@ -102,7 +102,7 @@ export default function LandingPage() {
               <li>✔ Teste gratuito sem cartão</li>
             </ul>
             <Button onClick={() => router.push("/signin")} className="w-full py-3 md:py-4 text-base md:text-lg rounded-2xl cursor-pointer bg-indigo-600 text-white hover:bg-indigo-700">
-              Testar gratuitamente agora
+              Testar gratuitamente
             </Button>
           </CardContent>
         </Card>
