@@ -99,9 +99,10 @@ export default function LandingPage() {
               <li>✔ Link personalizado</li>
               <li>✔ Dashboard de métricas</li>
               <li>✔ Suporte prioritário</li>
+              <li>✔ Teste gratuito sem cartão</li>
             </ul>
             <Button onClick={() => router.push("/signin")} className="w-full py-3 md:py-4 text-base md:text-lg rounded-2xl cursor-pointer bg-indigo-600 text-white hover:bg-indigo-700">
-              Assinar agora
+              Testar gratuitamente agora
             </Button>
           </CardContent>
         </Card>
