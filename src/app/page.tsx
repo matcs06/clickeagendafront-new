@@ -7,10 +7,11 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/
 import Image from "next/image";
 
 const steps = [
-  { title: "1. Cadastre seus serviços", gif: "/gifs/servicos.gif" },
-  { title: "2. Defina seu horário", gif: "/gifs/horarios.gif" },
-  { title: "3. Compartilhe o link", gif: "/gifs/link.gif" },
-  { title: "4. Receba agendamentos", gif: "/gifs/agendamentos.gif" },
+  { title: "1. Adicione informacoes do seu negócio", gif: "/gifs/configuracoes.gif" },
+  { title: "2. Cadastre seus serviços", gif: "/gifs/servico.gif" },
+  { title: "3. Defina seu horário", gif: "/gifs/horarios.gif" },
+  { title: "4. Compartilhe o link", gif: "/gifs/linkdocliente.gif" },
+  { title: "5. Receba agendamentos", gif: "/gifs/veragendamentos.gif" },
 ];
 
 export default function LandingPage() {
@@ -60,23 +61,29 @@ export default function LandingPage() {
         </div>
       </section>
 
+
       {/* Rest of your components remain the same */}
       {/* Como Funciona */}
       <section className="py-12 md:py-20 px-4 max-w-6xl mx-auto text-center">
-        <h2 className="text-2xl md:text-3xl font-bold mb-8 md:mb-12">Como funciona</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
-          {steps.map((step, i) => (
+        <h2 className="text-2xl md:text-2xl font-bold mb-8 md:mb-12">Como funciona</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 md:gap-6">
+        {steps.map((step, i) => (
             <div
               key={i}
-              className="bg-white border justify-center items-center border-gray-200 p-4 md:p-6 rounded-2xl shadow-md hover:shadow-lg transition-shadow cursor-pointer text-center"
+              className="bg-white border border-gray-200 p-4 md:p-6 rounded-2xl shadow-md hover:shadow-lg transition-shadow cursor-pointer flex flex-col items-center text-center"
               onClick={() => setSelectedGif(step.gif)}
             >
-              <h3 className="text-base md:text-xl font-semibold mb-2">{step.title}</h3>
+              <h3 className="text-sm md:text-base font-semibold">{step.title}</h3>
             </div>
           ))}
         </div>
         <div className="mt-8 md:mt-12 px-2">
-          <video className="rounded-xl shadow-lg mx-auto w-full max-w-md md:max-w-2xl" src={selectedGif} controls autoPlay loop muted />
+          <Image
+            width={600}
+            height={600}
+            src={selectedGif}
+            className="rounded-sm shadow-lg mx-auto w-full max-w-md md:max-w-2xl border border-gray-200"
+            alt="Demonstração"/>
         </div>
       </section>
 
