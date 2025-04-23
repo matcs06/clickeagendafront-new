@@ -7,8 +7,6 @@ import { CheckCircle2 } from "lucide-react"
 export default function FreeTrialSuccessPage() {
   const router = useRouter()
 
-  
-
   return (
     <div className="flex flex-col justify-center items-center px-4 text-center w-full">
       <CheckCircle2 className="text-green-500 w-16 h-16 mb-4" />

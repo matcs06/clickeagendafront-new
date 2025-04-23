@@ -3,9 +3,13 @@
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import api from '@/api/api'
-import Link from 'next/link'
+import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation"
+
 export default function SuccessPage() {
   const searchParams = useSearchParams()
+  const router = useRouter()
+
   const sessionId = searchParams.get('session_id')
   const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState('')
@@ -51,9 +55,9 @@ export default function SuccessPage() {
         ) : (
           <p>{message}</p>
         )}
-        <Link href="/admin/pages/dashboard" className="mt-6 inline-block text-blue-600 dark:text-blue-400 underline">
-          Voltar para o dashboard
-        </Link>
+        <Button className="cursor-pointer mt-2" onClick={() => router.push("/admin/pages/dashboard")}>
+          Ir para Dashboard
+        </Button>
       </div>
     </div>
   )
