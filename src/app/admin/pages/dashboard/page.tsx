@@ -138,8 +138,8 @@ export default function Dashboard() {
    }, [] as { service: string; value: number }[]);
 
   return (
-    <div className="p-6 space-y-6 mt-2 ml-2 mr-2 border-2 max-w-[100%] mx-auto rounded-md shadow-sm w-full">
-      <h1 className="text-2xl font-semibold">Dashboard</h1>
+    <div className="p-6 space-y-6 mt-2 ml-2 mr-2 border-1 max-w-[100%] mx-auto rounded-md shadow-sm w-full">
+      <h1 className="text-xl font-semibold text-foreground border-b-1 pb-5">Dashboard</h1>
       <div className={`flex items-center gap-2 sticky top-0 z-40 bg-background py-2 px-4 transition-shadow duration-300 ${scrolled ? "shadow-md" : ""}`}>
          <label htmlFor="filter" className="text-sm text-muted-foreground">
             Visualizar:
