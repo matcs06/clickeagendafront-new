@@ -12,11 +12,25 @@ interface AuthContextType {
   login: (username_or_email: string, password: string) => Promise<"true" | "false" | "verifyemail">;
   logout: () => void;
   signUp: (name:string, user_name: string, email:string, password:string) => Promise<boolean>;
-  authenticateWithGoogle: (user_name:string, token:string, user_id:string, name:string, email:string, stripeSubscriptionId:string) => void;
+  authenticateWithGoogle: (user: User, token: string) => void;
   refreshBeforeRequest: (token:string | undefined) => Promise<void>;
   updateAddInfo: (business_name:string, phone:string, address:string, welcome_message:string) => Promise<boolean>
-  getUserInfo: ()=> {user_id: string | null, name: string | null, email: string | null, business_name: string | null, user_name: string | null, stripeSubscriptionId: string | null}
+  getUserInfo: ()=> {user_id: string | null, name: string | null, email: string | null, business_name: string | null, user_name: string | null, stripeSubscriptionId: string | null, planExpiresAt: Date | null}
 }
+
+interface User {
+  business_name: string;
+  welcome_message: string;
+  phone: string;
+  address: string;
+  stripeSubscriptionId: string;
+  planExpiresAt: Date;
+  user_id: string
+  name: string;
+  email: string;
+  username: string;
+}
+
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -76,6 +90,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       Cookies.set("phone", data.user.phone)
       Cookies.set("address", data.user.address)
       Cookies.set("stripeSubscriptionId", data.user.stripeSubscriptionId)
+      Cookies.set("planExpiresAt",data.user.planExpiresAt.toISOString())
       setToken(data.access_token);
       return "true";
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -155,6 +170,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     Cookies.remove("phone")
     Cookies.remove("address")
     Cookies.remove("stripeSubscriptionId")
+    Cookies.remove("planExpiresAt")
+    Cookies.remove("welcome_message")
 
     setToken(null);
     setUserId(null);
@@ -162,13 +179,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   };
 
-  const authenticateWithGoogle = async (user_name:string, token:string, user_id:string, name:string, email: string, stripeSubscriptionId: string)  => { 
+  const authenticateWithGoogle = async (user: User, token:string)  => { 
     Cookies.set("token", token, { expires: 1 / 96 }); // 1/96 of a day = 15 minutes
-    Cookies.set("user_id", user_id); // Store user_id
-    Cookies.set("name", name); // Store user_name
-    Cookies.set("user_name", user_name); // Store user_name
-    Cookies.set("email", email )
-    Cookies.set("stripeSubscriptionId", stripeSubscriptionId)
+    Cookies.set("user_id", user.user_id); // Store user_id
+    Cookies.set("name", user.name); // Store user_name
+    Cookies.set("user_name", user.username); // Store user_name
+    Cookies.set("email", user.email )
+    Cookies.set("stripeSubscriptionId", user.stripeSubscriptionId)
+    Cookies.set("planExpiresAt",String(user.planExpiresAt))
+    Cookies.set("address", user.address)
+    Cookies.set("phone", user.phone)
+    Cookies.set("business_name", user.business_name); // Store business_name
+    Cookies.set("welcome_message", user.welcome_message)
+    setToken(token);
+
   };
 
   // Function to fetch user data from cookies
@@ -178,7 +202,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     email: Cookies.get("email") ?? null,
     business_name: Cookies.get("business_name") ?? null,
     user_name: Cookies.get("user_name") ?? null,
-    stripeSubscriptionId: Cookies.get("stripeSubscriptionId") ?? null
+    stripeSubscriptionId: Cookies.get("stripeSubscriptionId") ?? null,
+    planExpiresAt: Cookies.get("planExpiresAt") ? new Date(Cookies.get("planExpiresAt")!) : null
   });
 
   return (

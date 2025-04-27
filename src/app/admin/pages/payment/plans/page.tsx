@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation"
 import {users} from "@/lib/customInterfaceUsers"
 import { toast } from "sonner"
 import { usePlanModal } from "@/app/auth/context/payment-context"
+import { useAuth } from "@/app/auth/context/auth-context"
 
 const defaultPlan = {
   name: "Plano Essencial",
@@ -36,17 +37,28 @@ const defaultPlan = {
 
 export default function PlansPage() {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly")
+  const {getUserInfo} = useAuth()
   const [loading, setLoading] = useState(false)
   const [plan, setPlan] = useState(defaultPlan)
     const { hidePlanModal } = usePlanModal();
-  
+  const [showFreeTrial, setShowFreeTrial] = useState(false)
 
     const router = useRouter()
   
 
   useEffect(()=>{
+
+
+
     const username = Cookies.get("user_name")
     const user = users.find((user) => user.name === username)
+
+    const userInfo = getUserInfo()
+    if(userInfo.stripeSubscriptionId == "free-trial"){
+      setShowFreeTrial(false)
+    }else{
+      setShowFreeTrial(true)
+    }
 
     if (user) {
       setPlan({
@@ -153,14 +165,22 @@ export default function PlansPage() {
           >
             {loading ? "Redirecionando..." : "Assinar plano"}
           </Button>
-          <Button
-            variant="outline"
-            className="w-full cursor-pointer mt-2"
-            onClick={handleFreeTrial}
-            disabled={loading}
-          >
-            {loading ? "Ativando..." : "Plano gratuito (30 dias) sem cartão"}
-          </Button>
+          {!showFreeTrial && (
+            <p className="text-sm text-muted-foreground mt-2">
+              Você está no plano gratuito. Assine agora para usar sem limitações.
+            </p>
+          )}
+          {showFreeTrial && (
+            <Button
+              variant="outline"
+              className="w-full cursor-pointer mt-2"
+              onClick={handleFreeTrial}
+              disabled={loading}
+            >
+              {loading ? "Ativando..." : "Plano gratuito (30 dias) sem cartão"}
+            </Button>
+          )}
+         
         </CardContent>
       </Card>
     </div>

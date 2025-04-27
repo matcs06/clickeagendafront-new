@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import api from '@/api/api'
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
-
+import Cookies from 'js-cookie'
 export default function SuccessPage() {
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -23,8 +23,10 @@ export default function SuccessPage() {
 
             try {
                const response = await api.get(`/payments/confirm-subscription?session_id=${sessionId}`)
+               
                setMessage(`Pagamento realizado com sucesso! Bem-vindo ao Click&Agenda 🎉`)
                console.log("Subscription received:", response.data)
+               Cookies.set("stripeSubscriptionId", response.data.id)
                setSuccess(true)
                setLoading(false)
 
