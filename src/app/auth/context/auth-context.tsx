@@ -90,7 +90,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       Cookies.set("phone", data.user.phone)
       Cookies.set("address", data.user.address)
       Cookies.set("stripeSubscriptionId", data.user.stripeSubscriptionId)
-      Cookies.set("planExpiresAt",data.user.planExpiresAt.toISOString())
+      Cookies.set("planExpiresAt",String(data.user.planExpiresAt))
       setToken(data.access_token);
       return "true";
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

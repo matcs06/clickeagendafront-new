@@ -118,6 +118,8 @@ export default function PlansPage() {
       )
       toast.success("Plano gratuito ativado com sucesso!")
       hidePlanModal()
+      Cookies.set("stripeSubscriptionId", "free-trial")
+      Cookies.set("planExpiresAt", String(new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)))
       router.push("/admin/pages/payment/free-trial")
     } catch  {
       toast.error("Erro ao ativar plano gratuito")
