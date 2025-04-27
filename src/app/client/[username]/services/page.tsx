@@ -15,6 +15,7 @@ interface IService {
   duration: string
   choosed_date:string
   choosed_time:string
+  enabled:boolean
 }
 
 export default function ServicesPage() {
@@ -26,7 +27,7 @@ export default function ServicesPage() {
   const fetchServices = async () => {
     const user_id = localStorage.getItem("ca_admin_user_id")
     const response = await api.get<IService[]>(`/products?user_id=${user_id}`, { withCredentials: true })
-    return response.data
+    return response.data.filter((service) => service.enabled)
   }
 
   const { data: services, isLoading } = useQuery({
