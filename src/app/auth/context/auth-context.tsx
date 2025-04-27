@@ -90,7 +90,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       Cookies.set("phone", data.user.phone)
       Cookies.set("address", data.user.address)
       Cookies.set("stripeSubscriptionId", data.user.stripeSubscriptionId)
-      Cookies.set("planExpiresAt",String(data.user.planExpiresAt))
+      Cookies.set("planExpiresAt", String(data.user.planExpiresAt))
       setToken(data.access_token);
       return "true";
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -186,7 +186,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     Cookies.set("user_name", user.username); // Store user_name
     Cookies.set("email", user.email )
     Cookies.set("stripeSubscriptionId", user.stripeSubscriptionId)
-    Cookies.set("planExpiresAt",String(user.planExpiresAt))
+    Cookies.set("planExpiresAt", String(user.planExpiresAt))
     Cookies.set("address", user.address)
     Cookies.set("phone", user.phone)
     Cookies.set("business_name", user.business_name); // Store business_name
