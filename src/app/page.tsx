@@ -96,8 +96,15 @@ export default function LandingPage() {
             <p className="mb-6 text-gray-700 text-sm md:text-base">Tudo que você precisa para agendar com seus clientes.</p>
             <ul className="text-left mb-6 md:mb-8 space-y-2 md:space-y-3 text-sm md:text-base text-gray-800">
               <li>✔ Agendamentos ilimitados</li>
-              <li>✔ Link personalizado</li>
-              <li>✔ Dashboard de métricas</li>
+              <li>✔ Link personalizado para clientes</li>
+              <li>✔ Dashboard de métricas:</li>
+              <ul className="ml-6 space-y-1 list-disc">
+                <li>• Quantidade de agendamentos</li>
+                <li>• Serviço com mais retorno</li>
+                <li>• Dia da semana com mais agendamentos</li>
+                <li>• Faturamento estimado</li>
+              </ul>
+              <li>✔ Confirmação de agendamentos pelo WhatsApp</li>
               <li>✔ Suporte prioritário</li>
               <li>✔ Teste gratuito sem cartão</li>
             </ul>
