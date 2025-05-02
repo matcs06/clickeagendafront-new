@@ -79,6 +79,7 @@ export default function LandingPage() {
         </div>
         <div className="mt-8 md:mt-12 px-2">
           <Image
+            unoptimized
             width={600}
             height={600}
             src={selectedGif}
