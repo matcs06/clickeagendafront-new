@@ -13,6 +13,7 @@ import {
 import { createEventModalPlugin } from '@schedule-x/event-modal'
 import Cookies from 'js-cookie'
 import { createEventsServicePlugin } from '@schedule-x/events-service'
+import {createCurrentTimePlugin} from '@schedule-x/current-time'
 import '@schedule-x/theme-default/dist/index.css'
 import { useEffect, useState } from "react";
 import { useTheme } from 'next-themes'
@@ -45,6 +46,11 @@ interface ExtendedCalendarEvent extends CalendarEventExternal {
 function CalendarApp() {
   const eventsService = useState(() => createEventsServicePlugin())[0]
   const eventModal = createEventModalPlugin()
+  const currentTimePlugin = createCurrentTimePlugin({
+    fullWeekWidth: true,
+    timeZoneOffset: -180,
+  
+  })
   const {refreshBeforeRequest} = useAuth()
 
   const { theme } = useTheme()
@@ -80,19 +86,19 @@ function CalendarApp() {
     
     dayBoundaries:{
       start: "07:00",
-      end: "22:00"
+      end: "23:00"
     },
     weekOptions:{
       gridHeight: 1200,
       eventWidth: 100,
     },
-    
+  
     isResponsive:false,
     locale:"pt-BR",
     defaultView: viewWeek.name,
     
     views: [createViewDay(), createViewWeek(), createViewMonthGrid(), createViewMonthAgenda()],
-    plugins: [eventsService, eventModal],
+    plugins: [eventsService, eventModal, currentTimePlugin],
     callbacks: {
       onSelectedDateUpdate(date) {
         setCalendarViewMonthYear(date.split("-").reverse().join("/").substring(3))
@@ -225,8 +231,10 @@ function CalendarApp() {
         }) // Wait for DOM to render moda
       }
     }
+
     //events: formatedSchedules
   },
+
 )
 
   const fetchSchedules = async (): Promise<Schedules[]> => {
