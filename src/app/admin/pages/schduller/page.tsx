@@ -175,7 +175,7 @@ function CalendarApp() {
         });
 
           const deleteButton = document.createElement('button')
-          deleteButton.textContent = 'Excluir'
+          deleteButton.textContent = 'Cancelar'
           deleteButton.className = 'delete-button'
           deleteButton.style.cssText = `
           padding: 8px 16px;
