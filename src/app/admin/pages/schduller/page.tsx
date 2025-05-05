@@ -86,7 +86,7 @@ function CalendarApp() {
     
     dayBoundaries:{
       start: "07:00",
-      end: "23:00"
+      end: "20:00"
     },
     weekOptions:{
       gridHeight: 1200,
