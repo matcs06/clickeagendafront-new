@@ -54,7 +54,7 @@ function AppSidebarComponent({ ...props }: React.ComponentProps<typeof Sidebar>)
           icon: Clock10Icon,
         },
         {
-          title: "Calendário",
+          title: "Agenda",
           url: "/admin/pages/schduller",
           icon: CalendarFold,
         },
